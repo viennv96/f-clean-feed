@@ -124,6 +124,9 @@
   "authorBy": {
     "message": "Phát triển bởi"
   },
+  "kind_keepFeed": {
+    "message": "Không tự tải lại bảng tin"
+  },
   "kind_showPromo": {
     "message": "Thẻ giới thiệu của tác giả"
   }

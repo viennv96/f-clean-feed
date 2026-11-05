@@ -10,6 +10,7 @@ export const DEFAULTS = {
   mode: "hide", // "hide" | "collapse"
   allowFriendReels: false,
   showPromo: true, // developer's card in the right column (content/bridge.js)
+  keepFeed: true, // stop Facebook reloading the home feed when you come back to the tab
   kinds: {
     sponsored: true, suggested: true, reels: true, pymk: true, groups: true, stories: false,
     market: true, search: true, rail: true, birthdays: false, badges: false, clean: false,

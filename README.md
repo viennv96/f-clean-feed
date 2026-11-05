@@ -22,6 +22,7 @@
 - **Bảng tin:** bài được tài trợ, "Gợi ý cho bạn", Reels (có tuỳ chọn giữ Reels của bạn bè), "Những người bạn có thể biết", nhóm gợi ý, thanh Tin (Stories).
 - **Quảng cáo khác:** Marketplace, kết quả tìm kiếm, cột phải.
 - **Giao diện:** nhắc sinh nhật, số đếm thông báo, chế độ gọn (ẩn 2 cột bên ở trang chủ).
+- **Không tự tải lại bảng tin** (bật sẵn): Facebook thường nạp lại bảng tin và nhảy về đầu trang khi bạn quay lại tab sau hơn 2 phút ở app khác. Tuỳ chọn này giữ nguyên chỗ bạn đang đọc, và không cho Chrome (Memory Saver) tạm tắt tab Facebook khi chạy nền.
 - Hai chế độ: xoá khỏi trang, hoặc thu gọn (bấm để xem lại). Thống kê theo ngày và tổng.
 - Quảng cáo bị ẩn trước khi trình duyệt kịp vẽ, nên không có hiện tượng "nháy" quảng cáo.
 - Không máy chủ, không analytics, không mã bên thứ ba. Chỉ cần quyền `storage` và chỉ chạy trên facebook.com.
@@ -43,6 +44,7 @@
 | File | Vai trò |
 |---|---|
 | `content/main.js` | Chạy trong MAIN world. Tìm từng bài trong `[role=main] div[data-virtualized]` (bố cục hiện tại) hoặc `[role=feed] > div` (bố cục cũ), ngay trong callback của MutationObserver, tức là trước khi trang được vẽ. Nhận diện quảng cáo bằng cách lần theo chuỗi SVG `<use>` vẽ nhãn "Được tài trợ"/"Sponsored"; dự phòng bằng React fiber, `aria-labelledby`, link `/ads/about`, tiêu đề đa ngôn ngữ, link `/friends/suggestions`, `/groups/discover`, `/reel/`. Chỉ gắn `data-fbc-kind`, không xoá node. |
+| `background.js` | Service worker: đánh dấu tab Facebook không được tự tắt (Memory Saver) khi bật "Không tự tải lại bảng tin". |
 | `content/bridge.js` | Isolated world: đọc cài đặt từ `chrome.storage.sync`, ghi danh sách loại cần ẩn lên `<html data-fbc-hide="…">`, gom thống kê rồi ghi mỗi 2 giây, và đặt thẻ MMO VPS vào cột phải. |
 | `content/hide.css` | Quyết định ẩn bằng CSS thuần, nên bật/tắt có hiệu lực ngay, không phải quét lại. |
 | `popup/` | Popup HTML/JS thuần, không dùng framework. |
@@ -64,6 +66,10 @@ sh store/build.sh
 ```
 
 ## Lịch sử phiên bản
+
+**1.2.0**
+- Tuỳ chọn mới "Không tự tải lại bảng tin" (bật sẵn): Facebook không còn nạp lại bảng tin và nhảy về đầu trang khi bạn quay lại tab sau vài phút ở app khác.
+- Tab Facebook không bị Chrome (Memory Saver) tạm tắt khi chạy nền trong lúc bật tuỳ chọn này.
 
 **1.1.1**
 - Tên extension không còn ký hiệu ™ ("… cho Facebook").

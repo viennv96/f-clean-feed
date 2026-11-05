@@ -31,7 +31,7 @@ done
 # Store zip: the extension only, without tests and store sources.
 mkdir -p dist
 rm -f "dist/f-clean-feed-$VERSION.zip"
-zip -qr "dist/f-clean-feed-$VERSION.zip" manifest.json _locales content icons popup -x "*.DS_Store"
+zip -qr "dist/f-clean-feed-$VERSION.zip" manifest.json background.js _locales content icons popup -x "*.DS_Store"
 echo "Built store/assets/{en,vi} and dist/f-clean-feed-$VERSION.zip"
 
 # GitHub Pages copies of the graphics (docs/ is the published site).

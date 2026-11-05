@@ -8,6 +8,7 @@
     mode: "hide",
     allowFriendReels: false,
     showPromo: true,
+    keepFeed: true,
     kinds: {
       sponsored: true, suggested: true, reels: true, pymk: true, groups: true, stories: false,
       market: true, search: true, rail: true, birthdays: false, badges: false, clean: false,
@@ -35,6 +36,8 @@
   const PROMO_SNOOZE_MS = 7 * 24 * 60 * 60 * 1000;
   let promoSnoozedUntil = 0;
   let promoCard = null;
+  // Last "keepFeed" value sent to the service worker for this tab.
+  let keepTab = null;
 
   function apply(s) {
     settings = { ...DEFAULTS, ...s, kinds: { ...DEFAULTS.kinds, ...(s && s.kinds) } };
@@ -44,6 +47,18 @@
     if (hidden.has("reels") && !settings.allowFriendReels) hidden.add("reelpost");
     root.setAttribute("data-fbc-hide", [...hidden].join(" "));
     root.setAttribute("data-fbc-mode", settings.mode);
+    // main.js reads this to stop Facebook's stale-feed refresh; the service
+    // worker keeps the tab from being discarded by Chrome's Memory Saver.
+    const keep = Boolean(settings.enabled && settings.keepFeed);
+    root.toggleAttribute("data-fbc-keep", keep);
+    if (keep !== keepTab) {
+      keepTab = keep;
+      try {
+        chrome.runtime.sendMessage({ type: "keepTab", on: keep }).catch(() => {});
+      } catch {
+        // Extension reloaded or updated: this old content script is orphaned.
+      }
+    }
     placePromo();
   }
 

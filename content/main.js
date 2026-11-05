@@ -490,8 +490,43 @@
   setInterval(() => {
     heartbeatDue = true;
     schedule();
+    syncKeepFeed();
   }, 1500);
   schedule();
+
+  // ---- Keep the feed ----------------------------------------------------------
+  // Facebook reloads the home feed and jumps back to the top when the tab is
+  // shown again after being hidden for 2 minutes or idle for 10
+  // (useCometHomeStaleFeedRefresh; also on closing a post after 30 minutes).
+  // The thresholds live in a plain, writable module object, so "keepFeed"
+  // raises them to Infinity and puts the originals back when switched off.
+  // requireLazy only calls back once Facebook itself has defined the module.
+  const STALE_MODULE = "CometFeedStalenessConstantsEntryPointVariables";
+  const STALE_KEYS = ["FEED_STALE_TIMEOUT", "FEED_VISIBILITY_TIMEOUT", "FEED_STALE_PUSH_VIEW_TIMEOUT"];
+  let staleConsts = null;
+  let staleOriginal = null;
+  let staleHooked = false;
+  function syncKeepFeed() {
+    if (!staleHooked && typeof window.requireLazy === "function") {
+      staleHooked = true;
+      try {
+        window.requireLazy([STALE_MODULE], (c) => {
+          if (!c || typeof c !== "object") return;
+          staleConsts = c;
+          staleOriginal = Object.fromEntries(STALE_KEYS.map((k) => [k, c[k]]));
+          syncKeepFeed();
+        });
+      } catch {
+        staleHooked = false;
+      }
+    }
+    if (!staleConsts) return;
+    const keep = document.documentElement.hasAttribute("data-fbc-keep");
+    for (const k of STALE_KEYS) {
+      const v = keep ? Infinity : staleOriginal[k];
+      if (staleConsts[k] !== v) staleConsts[k] = v;
+    }
+  }
 
   // Debug hook: window.__fbcDebug(el) shows how an element was classified.
   window.__fbcDebug = (el) => ({ category: fiberCategory(el), dom: domKind(el), kind: el.getAttribute("data-fbc-kind") });
