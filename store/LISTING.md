@@ -7,7 +7,7 @@ Mọi nội dung dưới đây dán thẳng vào [Chrome Web Store Developer Das
 - [ ] **Thẻ quảng cáo trên trang Facebook:** chính sách Chrome Web Store cấm extension chèn quảng cáo vào trang của bên thứ ba, nhất là với một trình chặn quảng cáo. Trước khi nộp store, đặt `showPromo: false` trong `content/settings.js` và `content/bridge.js`, hoặc bỏ hẳn phần “Developer's card” trong `content/bridge.js`. Liên kết trong popup thì giữ được.
 - [ ] **Chạy thử trên Facebook thật.** Quảng cáo cột phải và khay Reels mới chỉ được test trên trang giả. Nộp bản chặn chưa sạch dễ bị đánh giá 1 sao ngay từ đầu.
 - [ ] Đăng ký tài khoản developer (phí một lần 5 USD) và bật xác minh 2 bước cho tài khoản Google.
-- [ ] Chính sách quyền riêng tư đã được đăng qua GitHub Pages: https://viennv96.github.io/f-clean-feed/privacy-policy.html (mở thử link trước khi nộp).
+- [ ] Chính sách quyền riêng tư đã được đăng qua GitHub Pages: https://cleanfeed.viennv.dev/privacy-policy.html (mở thử link trước khi nộp).
 - [ ] Chạy lại `sh store/build.sh` (cần server `fixture` đang chạy) để có `dist/f-clean-feed-<version>.zip` mới nhất.
 
 ## 1. Gói tải lên
@@ -114,7 +114,7 @@ F Clean Feed hides unwanted units on facebook.com – sponsored posts, recommend
 - I do not use or transfer user data for purposes that are unrelated to my item's single purpose
 - I do not use or transfer user data to determine creditworthiness or for lending purposes
 
-**Privacy policy URL:** `https://viennv96.github.io/f-clean-feed/privacy-policy.html`
+**Privacy policy URL:** `https://cleanfeed.viennv.dev/privacy-policy.html`
 
 ## 4. Rủi ro khi duyệt
 

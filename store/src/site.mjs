@@ -6,7 +6,7 @@
 import { readFileSync, writeFileSync } from "node:fs";
 
 const PAGE = "docs/index.html";
-const BASE = "https://viennv96.github.io/f-clean-feed/";
+const BASE = "https://cleanfeed.viennv.dev/";
 // Strings that legitimately contain markup (authored in the page itself).
 const HTML_KEYS = new Set(["s1", "s2", "s3", "s4"]);
 

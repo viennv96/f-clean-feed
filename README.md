@@ -10,9 +10,9 @@
 </p>
 
 <p align="center">
-  <a href="https://viennv96.github.io/f-clean-feed/">Website</a> ·
+  <a href="https://cleanfeed.viennv.dev/">Website</a> ·
   <a href="https://github.com/viennv96/f-clean-feed/releases/latest">Download</a> ·
-  <a href="https://viennv96.github.io/f-clean-feed/privacy-policy.html">Privacy</a>
+  <a href="https://cleanfeed.viennv.dev/privacy-policy.html">Privacy</a>
 </p>
 
 ![F Clean Feed](docs/assets/en-screenshot-1.png)
