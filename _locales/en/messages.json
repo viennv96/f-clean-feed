@@ -164,5 +164,8 @@
   },
   "updateFailed": {
     "message": "Couldn't check"
+  },
+  "updateCheckNow": {
+    "message": "Check for updates"
   }
 }

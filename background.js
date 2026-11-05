@@ -5,10 +5,11 @@
 //    discarded tab reloads from scratch when you come back). tabs.update needs
 //    no "tabs" permission for this.
 // 2. Update check for copies installed from GitHub (unpacked): Chrome cannot
-//    update those by itself, so the latest GitHub release is checked every few
-//    hours; a newer version puts "NEW" on the toolbar icon and a banner in the
-//    popup. Copies from the Chrome Web Store (manifest has update_url) are
-//    updated by Chrome and skip this.
+//    update those by itself, so the latest GitHub release is checked every
+//    hour, at browser start and when the popup opens; a newer version puts
+//    "NEW" on the toolbar icon and a banner in the popup. Copies from the
+//    Chrome Web Store (manifest has update_url) are updated by Chrome and skip
+//    this.
 
 chrome.runtime.onMessage.addListener((msg, sender, reply) => {
   if (msg?.type === "keepTab" && sender.tab?.id != null) {
@@ -23,7 +24,7 @@ chrome.runtime.onMessage.addListener((msg, sender, reply) => {
 
 const REPO = "viennv96/f-clean-feed";
 const RELEASES = `https://github.com/${REPO}/releases/`;
-const CHECK_EVERY_MIN = 6 * 60;
+const CHECK_EVERY_MIN = 60;
 
 const fromStore = () => "update_url" in chrome.runtime.getManifest();
 

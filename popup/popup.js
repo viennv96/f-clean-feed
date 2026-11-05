@@ -161,7 +161,7 @@ chrome.storage.onChanged.addListener((changes, area) => {
 
 // ---- Updates (copies installed from GitHub) ---------------------------------
 // background.js checks the latest release every few hours; the popup shows
-// what it found, re-checks when the last check is over an hour old, and the
+// what it found, re-checks when the last check is over 5 minutes old, and the
 // version number in the footer checks on demand. "Update now" reloads the
 // extension from its folder once the new files are in place.
 const current = chrome.runtime.getManifest().version;
@@ -181,19 +181,35 @@ function showUpdate(update) {
   $("#update-notes").href = update.page;
   $("#update-download").href = update.zip || update.page;
 }
-const versionButton = $("#version");
-versionButton.title = t("updateCheck");
-versionButton.addEventListener("click", async () => {
-  versionButton.textContent = t("updateChecking");
+// Manual check: the "Check for updates" button, and the version number too.
+// The label shows the outcome for a few seconds.
+let checking = false;
+async function checkNow(label, idle) {
+  if (checking) return;
+  checking = true;
+  checkButton.disabled = true;
+  checkButton.classList.add("busy");
+  label.textContent = t("updateChecking");
   const res = await chrome.runtime.sendMessage({ type: "checkUpdate" }).catch(() => null);
   if (res) showUpdate(res.update);
-  versionButton.textContent = !res || res.error ? t("updateFailed") : res.update ? `v${current}` : t("updateLatest");
-  setTimeout(() => (versionButton.textContent = `v${current}`), 2500);
-});
+  label.textContent = !res || res.error ? t("updateFailed") : res.update ? t("updateTitle", res.update.version) : t("updateLatest");
+  checkButton.classList.remove("busy");
+  setTimeout(() => {
+    label.textContent = idle;
+    checkButton.disabled = false;
+    checking = false;
+  }, 2500);
+}
+const checkButton = $("#check-update");
+const checkLabel = $("#check-label");
+checkButton.addEventListener("click", () => checkNow(checkLabel, t("updateCheckNow")));
+const versionButton = $("#version");
+versionButton.title = t("updateCheck");
+versionButton.addEventListener("click", () => checkNow(versionButton, `v${current}`));
 $("#update-reload").addEventListener("click", () => chrome.runtime.reload());
 
 const { update, updateCheckedAt = 0 } = await chrome.storage.local.get(["update", "updateCheckedAt"]);
 showUpdate(update);
-if (Date.now() - updateCheckedAt > 60 * 60 * 1000) {
+if (Date.now() - updateCheckedAt > 5 * 60 * 1000) {
   chrome.runtime.sendMessage({ type: "checkUpdate" }).then((res) => res && showUpdate(res.update)).catch(() => {});
 }

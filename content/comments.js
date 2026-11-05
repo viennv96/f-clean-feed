@@ -6,12 +6,18 @@
 // the click is let through, the dialog is kept invisible while it loads
 // (html[data-fbc-cpending] in hide.css), its response is read from the XHR,
 // the dialog is closed again and the comments are drawn under the post.
-// Writing a comment or loading more still uses Facebook's dialog ("Write a
-// comment" / "All comments" in the panel). Any failure shows the dialog as
-// usual, so the worst case is Facebook's normal behaviour.
+// Changing the sort order asks Facebook's own comment list query
+// (CommentListComponentsRootQuery) directly, with the post's feedback ID and
+// the chosen ordering from that first response. A comment typed in the
+// panel's box is posted by Facebook itself: the hidden dialog's own comment
+// box (a Lexical editor) gets the text and submits it. Loading more comments,
+// replies, photos and stickers still use Facebook's dialog.
+// Any failure shows the dialog as usual, so the worst case is Facebook's
+// normal behaviour.
 (() => {
   const root = document.documentElement;
   const QUERY = "CometSinglePostDialogContentQuery";
+  const SORT_QUERY = "CommentListComponentsRootQuery";
   const BUTTON = '[data-ad-rendering-role="comment_button"]';
   const TIMEOUT_MS = 8000;
   // Facebook keeps a post it has already shown in its Relay store and then
@@ -26,6 +32,10 @@
   const CACHE_MAX = 50;
   const OTHER_VIEWER = /^\/(reel|watch|stories|photo|photos)\b|\/(videos|reel|photos)\//;
   const cache = new Map();
+  // Facebook's own "View more comments" link under a post opens the dialog
+  // too; it opens this panel instead.
+  const MORE = /^(Xem thêm bình luận|Xem bình luận trước|View more comments|View previous comments)/i;
+  const UNIT = '[role="main"] [data-virtualized], [role="main"] [role="article"]';
 
   const TEXT = {
     vi: {
@@ -38,6 +48,13 @@
       media: "Ảnh trong bình luận",
       like: (n) => `${n} lượt thích`,
       now: "Vừa xong",
+      sort: "Sắp xếp bình luận",
+      placeholder: "Viết bình luận…",
+      send: "Gửi bình luận",
+      posting: "Đang gửi…",
+      postFailed: "Chưa gửi được. Bấm Gửi để thử lại.",
+      you: "Bạn",
+      failed: "Không tải được bình luận.",
       ago: { m: "phút", h: "giờ", d: "ngày", w: "tuần" },
     },
     en: {
@@ -50,12 +67,21 @@
       media: "Image in comment",
       like: (n) => `${n} ${n === "1" ? "like" : "likes"}`,
       now: "Just now",
+      sort: "Sort comments",
+      placeholder: "Write a comment…",
+      send: "Post comment",
+      posting: "Posting…",
+      postFailed: "Couldn't post. Press Send to try again.",
+      you: "You",
+      failed: "Couldn't load comments.",
       ago: { m: "m", h: "h", d: "d", w: "w" },
     },
   };
   const t = () => TEXT[(root.lang || "").toLowerCase().startsWith("vi") ? "vi" : "en"];
 
   let pending = null; // { unit, button, panel, url, timer, started, requested }
+  let sorting = null; // { done, data } while a re-sort goes through the dialog
+  let posting = null; // { sent, done, ok, data } while a comment goes through the dialog
 
   const enabled = () => root.hasAttribute("data-fbc-inline");
 
@@ -71,15 +97,27 @@
     "click",
     (e) => {
       if (!enabled() || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
-      const button = e.target instanceof Element && e.target.closest('[role="button"]');
-      if (!button || !button.querySelector(BUTTON) || button.closest('[role="dialog"]')) return;
+      let button = e.target instanceof Element && e.target.closest('[role="button"]');
+      if (!button || button.closest('[role="dialog"]') || button.closest("[data-fbc-comments]")) return;
+      if (!button.querySelector(BUTTON)) {
+        // Facebook's "View more comments" under a post: open the panel.
+        const host = MORE.test(button.textContent.trim()) && button.closest(UNIT);
+        const comment = host && host.querySelector(BUTTON);
+        if (!comment) return;
+        e.preventDefault();
+        e.stopPropagation();
+        const open = host.querySelector("[data-fbc-comments]");
+        if (open) open.scrollIntoView({ block: "nearest" });
+        else comment.closest('[role="button"]').click();
+        return;
+      }
       // "Write a comment" / "All comments" in the panel re-click the button
       // and want Facebook's own dialog.
       if (button.hasAttribute("data-fbc-native")) {
         button.removeAttribute("data-fbc-native");
         return;
       }
-      const unit = button.closest('[role="main"] [data-virtualized], [role="main"] [role="article"]');
+      const unit = button.closest(UNIT);
       // Reel posts open the Reels viewer; leave those to Facebook.
       if (!unit || unit.querySelector('a[href*="/reel/"]')) return;
       const open = unit.querySelector(":scope [data-fbc-comments]");
@@ -87,7 +125,7 @@
         // Second click on Comment folds the panel away.
         e.preventDefault();
         e.stopPropagation();
-        open.remove();
+        removePanel(open);
         return;
       }
       if (pending) finish(pending, false);
@@ -97,6 +135,7 @@
       status.append(el("span", "fbc-cm-spin"), el("span", "", t().loading));
       panel.append(status, el("div", "fbc-cm-bar"));
       placePanel(button, panel);
+      hideNative(unit, button, panel);
       const p = { unit, button, panel, url: location.href, timer: 0, started: Date.now(), requested: false, data: null };
       pending = p;
       p.timer = setTimeout(() => finish(p, false), TIMEOUT_MS);
@@ -122,6 +161,13 @@
       const outer = d.parentElement && d.parentElement.closest('[role="dialog"]');
       const layer = (outer || d).parentElement;
       if (layer && layer !== document.body && !layer.hasAttribute("data-fbc-layer")) layer.setAttribute("data-fbc-layer", "");
+    }
+    // Popover menus (the dialog's sort menu) sit in a layer of their own.
+    const main = document.querySelector('[role="main"]');
+    for (const m of document.querySelectorAll('[role="menu"], [role="listbox"]')) {
+      let layer = m;
+      while (layer.parentElement && layer.parentElement !== document.body && !(main && layer.parentElement.contains(main))) layer = layer.parentElement;
+      if (layer !== document.body && !layer.hasAttribute("data-fbc-layer")) layer.setAttribute("data-fbc-layer", "");
     }
   }
   function showLayers() {
@@ -177,6 +223,30 @@
           this.addEventListener("loadend", () => onResponse(rec, this));
         }
       }
+      const po = posting;
+      if (po && typeof body === "string" && /fb_api_req_friendly_name=[^&]*(CreateComment|CommentCreate)/i.test(body) && String(this.__fbcUrl).includes("/api/graphql")) {
+        po.sent = true;
+        this.addEventListener("loadend", () => {
+          po.ok = this.status === 200 && !/^\s*\{"errors"/.test(this.responseText || "");
+          try {
+            po.data = po.ok ? newComment(this.responseText) : null;
+          } catch {
+            po.data = null;
+          }
+          po.done = true;
+        });
+      }
+      const so = sorting;
+      if (so && typeof body === "string" && body.includes(SORT_QUERY) && String(this.__fbcUrl).includes("/api/graphql")) {
+        this.addEventListener("loadend", () => {
+          try {
+            so.data = this.status === 200 ? parse(this.responseText) : null;
+          } catch {
+            so.data = null;
+          }
+          so.done = true;
+        });
+      }
     } catch {
       // Never get in the way of Facebook's own request.
     }
@@ -208,26 +278,33 @@
   }
 
   // The response is several JSON documents (one per line, @defer chunks).
+  // Returns the comments plus what a re-sort needs: the post's feedback ID and
+  // the orderings Facebook offers for it.
   function parse(text) {
-    let list = null;
-    const find = (o) => {
-      if (list || !o || typeof o !== "object") return;
-      if (o.comment_list_renderer) {
-        list = o.comment_list_renderer;
-        return;
-      }
-      for (const k in o) find(o[k]);
-    };
+    const docs = [];
     for (const line of text.split("\n")) {
       if (!line.trim()) continue;
       try {
-        find(JSON.parse(line));
+        docs.push(JSON.parse(line));
       } catch {
         // Partial or non-JSON line: skip.
       }
-      if (list) break;
     }
-    if (!list) return null;
+    const find = (test) => {
+      let hit = null;
+      const walk = (o) => {
+        if (hit || !o || typeof o !== "object") return;
+        if (test(o)) {
+          hit = o;
+          return;
+        }
+        for (const k in o) walk(o[k]);
+      };
+      docs.forEach(walk);
+      return hit;
+    };
+    const holder = find((o) => o.comment_list_renderer);
+    const list = holder ? holder.comment_list_renderer : null;
     let conn = null;
     const findConn = (o) => {
       if (conn || !o || typeof o !== "object") return;
@@ -237,12 +314,64 @@
       }
       for (const k in o) findConn(o[k]);
     };
-    findConn(list);
+    if (list) findConn(list);
+    else docs.forEach(findConn);
     if (!conn) return null;
+    const intentsHolder = find((o) => o.selected_intent || Array.isArray(o.selectable_intents));
+    const intents = [];
+    const add = (i, selected) => {
+      if (!i || !i.intent_token || !i.title) return;
+      const known = intents.find((x) => x.token === i.intent_token);
+      if (known) known.selected ||= selected;
+      else intents.push({ token: i.intent_token, title: i.title, selected });
+    };
+    if (intentsHolder) {
+      add(intentsHolder.selected_intent, true);
+      (intentsHolder.selectable_intents || []).forEach((i) => add(i, false));
+    }
     return {
       total: Number(conn.total_count) || conn.edges.length,
       comments: conn.edges.map((e) => e && e.node).filter(Boolean).map(comment),
+      feedbackId: (list && list.feedback && list.feedback.id) || null,
+      intents,
     };
+  }
+
+  // Comments in another order, straight from Facebook's comment list query.
+  // Its document ID and provided variables come from Facebook's own module,
+  // the session tokens from the page, as Facebook's own request has them.
+  async function fetchSorted(feedbackId, token) {
+    const req = window.require;
+    const op = req("CommentListComponentsRootQuery.graphql").params;
+    const provided = Object.fromEntries(Object.entries(op.providedVariables || {}).map(([k, v]) => [k, v.get()]));
+    const user = req("CurrentUserInitialData").USER_ID;
+    const variables = {
+      commentsIntentToken: token,
+      feedLocation: "POST_PERMALINK_DIALOG",
+      feedbackSource: 2,
+      focusCommentID: null,
+      scale: Math.round(window.devicePixelRatio) || 1,
+      useDefaultActor: false,
+      id: feedbackId,
+      ...provided,
+    };
+    const body = new URLSearchParams({
+      av: user,
+      __user: user,
+      __a: "1",
+      fb_dtsg: req("DTSGInitialData").token,
+      lsd: req("LSD").token,
+      fb_api_caller_class: "RelayModern",
+      fb_api_req_friendly_name: "CommentListComponentsRootQuery",
+      variables: JSON.stringify(variables),
+      server_timestamps: "true",
+      doc_id: op.id,
+    });
+    const res = await fetch("/api/graphql/", { method: "POST", body, credentials: "include" });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = parse(await res.text());
+    if (!data) throw new Error("no comments in response");
+    return data;
   }
 
   function comment(node) {
@@ -294,15 +423,19 @@
     clearTimeout(p.timer);
     if (!ok) {
       // Fall back to Facebook's dialog, which is already open underneath.
-      p.panel.remove();
+      removePanel(p.panel);
       showLayers();
       return;
     }
-    // The data can be ready (preloaded) before Facebook has even opened the
-    // dialog, and a close request sent while it is still opening is ignored,
-    // so keep asking until it is gone. Closing goes through Facebook itself
-    // (Escape, then its close button): it puts the URL back on its own, and
-    // stepping back in history ourselves as well would leave the page.
+    closeHidden(p.url, () => p.data && remember(location.pathname, p.data));
+  }
+
+  // The data can be ready (preloaded) before Facebook has even opened the
+  // dialog, and a close request sent while it is still opening is ignored, so
+  // keep asking until it is gone. Closing goes through Facebook itself
+  // (Escape, then its close button): it puts the URL back on its own, and
+  // stepping back in history ourselves as well would leave the page.
+  function closeHidden(url, onRouted) {
     const started = Date.now();
     let lastClose = 0;
     let attempts = 0;
@@ -312,17 +445,17 @@
       const now = Date.now();
       const dialog = document.querySelector('[role="dialog"][aria-modal="true"]');
       if (dialog) seenDialog = true;
-      if (location.href !== p.url && !routed) {
+      if (location.href !== url && !routed) {
         routed = true;
-        if (p.data) remember(location.pathname, p.data);
+        if (onRouted) onRouted();
       }
       // Once a routed dialog has given the URL back it is closing: let it go.
-      const closing = routed && location.href === p.url;
+      const closing = routed && location.href === url;
       if (dialog && !closing && now - lastClose > 500) {
         lastClose = now;
         closeDialog(dialog, ++attempts);
       }
-      const gone = !dialog && location.href === p.url;
+      const gone = !dialog && location.href === url;
       // Done once the dialog has come and gone (or never came at all).
       if ((gone && (seenDialog || now - started > 1500)) || now - started > 6000) showLayers();
       else requestAnimationFrame(step);
@@ -340,6 +473,61 @@
   }
 
   // ---- Panel --------------------------------------------------------------
+  // Facebook sometimes shows a few comments, "View more comments" and its own
+  // comment box under a post, and draws them (again) once a comment has been
+  // posted. While the panel is open all of that is hidden so nothing shows
+  // twice, including what Facebook adds later.
+  function hideNative(unit, button, panel) {
+    const mark = (n) => {
+      if (n && !n.hasAttribute("data-fbc-dup")) n.setAttribute("data-fbc-dup", "");
+    };
+    const sweep = () => {
+      for (const a of unit.querySelectorAll('[role="article"]')) {
+        if (a.contains(button) || panel.contains(a)) continue;
+        const outer = a.parentElement && a.parentElement.closest('[role="article"]');
+        if (outer && !outer.contains(button)) continue; // a reply: its parent goes
+        mark(a);
+      }
+      for (const b of unit.querySelectorAll('[role="button"]')) {
+        if (!panel.contains(b) && MORE.test(b.textContent.trim())) mark(b);
+      }
+      // Facebook's comment box: its whole row, avatar included.
+      for (const box of unit.querySelectorAll('[contenteditable="true"][role="textbox"]')) {
+        if (panel.contains(box)) continue;
+        let row = box;
+        while (
+          row.parentElement &&
+          !row.parentElement.hasAttribute("data-virtualized") &&
+          !row.parentElement.contains(button) &&
+          !row.parentElement.contains(panel) &&
+          row.parentElement.getBoundingClientRect().height < 200
+        ) {
+          row = row.parentElement;
+        }
+        mark(row);
+      }
+    };
+    sweep();
+    let queued = false;
+    const watcher = new MutationObserver(() => {
+      if (queued) return;
+      queued = true;
+      requestAnimationFrame(() => {
+        queued = false;
+        if (panel.isConnected) sweep();
+      });
+    });
+    watcher.observe(unit, { childList: true, subtree: true });
+    panel.__fbcWatcher = watcher;
+  }
+
+  function removePanel(panel) {
+    if (panel.__fbcWatcher) panel.__fbcWatcher.disconnect();
+    const unit = panel.closest("[data-virtualized]") || panel.parentElement;
+    if (unit) for (const n of unit.querySelectorAll("[data-fbc-dup]")) n.removeAttribute("data-fbc-dup");
+    panel.remove();
+  }
+
   function buildPanel() {
     const panel = el("div", "fbc-cm");
     panel.setAttribute("data-fbc-comments", "");
@@ -412,12 +600,32 @@
     return row;
   }
 
+  // p: { panel, button } of the post. Called for the first load and again
+  // after every re-sort.
   function render(p, data) {
     const s = t();
     const panel = p.panel;
     panel.textContent = "";
-    if (!data.comments.length) panel.append(el("div", "fbc-cm-status", s.empty));
-    for (const c of data.comments) panel.append(item(c, 0));
+    panel.__fbcData = data;
+    // Sort menu, when Facebook offers more than one ordering for this post.
+    if (data.feedbackId && data.intents.length > 1) {
+      const head = el("div", "fbc-cm-head");
+      const select = el("select", "fbc-cm-sort");
+      select.setAttribute("aria-label", s.sort);
+      for (const i of data.intents) {
+        const o = el("option", "", i.title);
+        o.value = i.token;
+        o.selected = i.selected;
+        select.append(o);
+      }
+      select.addEventListener("change", () => resort(p, select.value));
+      head.append(select);
+      panel.append(head);
+    }
+    const list = el("div", "fbc-cm-list");
+    if (!data.comments.length) list.append(el("div", "fbc-cm-status", s.empty));
+    for (const c of data.comments) list.append(item(c, 0));
+    panel.append(list);
     const foot = el("div", "fbc-cm-foot");
     const openDialog = () => {
       p.button.setAttribute("data-fbc-native", "");
@@ -430,14 +638,276 @@
       return b;
     };
     // "N replies": the replies themselves live in Facebook's dialog.
-    for (const more of panel.querySelectorAll(".fbc-cm-more")) more.addEventListener("click", openDialog);
+    for (const more of list.querySelectorAll(".fbc-cm-more")) more.addEventListener("click", openDialog);
     const shown = data.comments.reduce((n, c) => n + 1 + c.replies.length, 0);
     if (data.total > shown) foot.append(native(s.all(data.total)));
-    foot.append(native(s.write));
+    const write = el("button", "fbc-cm-link", s.write);
+    write.type = "button";
+    write.addEventListener("click", () => panel.querySelector(".fbc-cm-input")?.focus());
+    foot.append(write);
     const hide = el("button", "fbc-cm-link", s.hide);
     hide.type = "button";
-    hide.addEventListener("click", () => panel.remove());
+    hide.addEventListener("click", () => removePanel(panel));
     foot.append(hide);
-    panel.append(foot);
+    panel.append(composer(p), foot);
+  }
+
+  // ---- Writing a comment ----------------------------------------------------
+  // Text only; Enter sends, Shift+Enter starts a new line. Facebook posts it:
+  // see postThroughDialog.
+  function composer(p) {
+    const s = t();
+    const form = el("form", "fbc-cm-compose");
+    const input = el("textarea", "fbc-cm-input");
+    input.rows = 1;
+    input.placeholder = s.placeholder;
+    input.setAttribute("aria-label", s.placeholder);
+    const send = el("button", "fbc-cm-send");
+    send.type = "submit";
+    send.title = s.send;
+    send.setAttribute("aria-label", s.send);
+    // DOM APIs only: Facebook enforces Trusted Types, so no innerHTML.
+    const NS = "http://www.w3.org/2000/svg";
+    const svg = document.createElementNS(NS, "svg");
+    svg.setAttribute("viewBox", "0 0 24 24");
+    svg.setAttribute("width", "18");
+    svg.setAttribute("height", "18");
+    svg.setAttribute("aria-hidden", "true");
+    const path = document.createElementNS(NS, "path");
+    path.setAttribute("fill", "currentColor");
+    path.setAttribute("d", "M3.4 20.4 21 12 3.4 3.6l-.1 6.5L15 12l-11.7 1.9z");
+    svg.append(path);
+    send.append(svg);
+    const note = el("div", "fbc-cm-note");
+    note.setAttribute("role", "status");
+    const fit = () => {
+      input.style.height = "auto";
+      input.style.height = `${Math.min(input.scrollHeight, 160)}px`;
+    };
+    input.addEventListener("input", fit);
+    input.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" && !e.shiftKey && !e.isComposing) {
+        e.preventDefault();
+        form.requestSubmit();
+      }
+    });
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const text = input.value.trim();
+      if (!text || input.disabled) return;
+      input.disabled = send.disabled = true;
+      form.classList.add("busy");
+      note.textContent = s.posting;
+      let made;
+      try {
+        made = await postThroughDialog(p, text);
+      } catch {
+        input.disabled = send.disabled = false;
+        form.classList.remove("busy");
+        note.textContent = s.postFailed;
+        return;
+      }
+      // Shown at once; the cached copy of this post is out of date now.
+      for (const [k, v] of cache) if (v === p.panel.__fbcData) cache.delete(k);
+      const list = p.panel.querySelector(".fbc-cm-list");
+      list.querySelector(":scope > .fbc-cm-status")?.remove();
+      const c = made || mine(text);
+      if (!c.avatar) c.avatar = myAvatar();
+      list.append(item(c, 0));
+      input.value = "";
+      fit();
+      input.disabled = send.disabled = false;
+      form.classList.remove("busy");
+      note.textContent = "";
+      input.focus();
+    });
+    form.append(input, send);
+    const wrap = el("div", "fbc-cm-composer");
+    wrap.append(form, note);
+    return wrap;
+  }
+
+  // The new comment as Facebook returns it from the create mutation.
+  function newComment(text) {
+    for (const line of text.split("\n")) {
+      let doc;
+      try {
+        doc = JSON.parse(line);
+      } catch {
+        continue;
+      }
+      let node = null;
+      const walk = (o) => {
+        if (node || !o || typeof o !== "object") return;
+        if (o.__typename === "Comment" && (o.body || o.preferred_body)) {
+          node = o;
+          return;
+        }
+        for (const k in o) walk(o[k]);
+      };
+      walk(doc);
+      if (node) return comment(node);
+    }
+    return null;
+  }
+
+  // The signed-in person's picture, from Facebook's top bar.
+  function myAvatar() {
+    const img = document.querySelector('[role="banner"] svg image, [role="navigation"] svg image');
+    return (img && (img.getAttribute("xlink:href") || img.getAttribute("href"))) || "";
+  }
+
+  function mine(text) {
+    let name = t().you;
+    try {
+      name = window.require("CurrentUserInitialData").NAME || name;
+    } catch {
+      // keep the generic label
+    }
+    return { name, url: "", avatar: "", text, media: null, time: Date.now() / 1000, likes: "0", replyCount: 0, replies: [] };
+  }
+
+  // Lexical editor state for plain text, one line break per newline.
+  function lexicalState(text) {
+    const children = [];
+    text.split("\n").forEach((line, i) => {
+      if (i) children.push({ type: "linebreak", version: 1 });
+      if (line) children.push({ detail: 0, format: 0, mode: "normal", style: "", text: line, type: "text", version: 1 });
+    });
+    return {
+      root: {
+        children: [{ children, direction: null, format: "", indent: 0, type: "paragraph", version: 1 }],
+        direction: null,
+        format: "",
+        indent: 0,
+        type: "root",
+        version: 1,
+      },
+    };
+  }
+
+  // Open the post's dialog hidden, put the text in Facebook's own comment box
+  // and submit it the way a person would (Enter, then the Post button if Enter
+  // did nothing), wait for Facebook's create-comment request, close.
+  async function postThroughDialog(p, text) {
+    if (pending || sorting || posting) throw new Error("busy");
+    const url = location.href;
+    const po = (posting = { sent: false, done: false, ok: false, data: null });
+    root.setAttribute("data-fbc-cpending", "");
+    layerObserver.observe(document.body, { childList: true, subtree: true });
+    p.button.setAttribute("data-fbc-native", "");
+    p.button.click();
+    let box = null;
+    try {
+      box = await waitFor(() => {
+        const d = document.querySelector('[role="dialog"][aria-modal="true"]');
+        const ed = d && d.querySelector('[contenteditable="true"][role="textbox"]');
+        return ed && ed.__lexicalEditor ? ed : null;
+      }, 6000);
+      if (!box) throw new Error("no comment box");
+      const editor = box.__lexicalEditor;
+      editor.setEditorState(editor.parseEditorState(JSON.stringify(lexicalState(text))));
+      box.focus();
+      await waitFor(() => box.textContent.trim().length > 0, 1000);
+      box.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter", code: "Enter", keyCode: 13, which: 13, bubbles: true, cancelable: true }));
+      if (!(await waitFor(() => po.sent, 1500))) {
+        const form = box.closest("form");
+        const buttons = form ? [...form.querySelectorAll('[role="button"]')] : [];
+        const submit = buttons.find((b) => /Đăng|Gửi|Post|Send|Comment/i.test(b.getAttribute("aria-label") || "")) || buttons[buttons.length - 1];
+        if (submit) submit.click();
+      }
+      await waitFor(() => po.done, 12000);
+      if (!po.ok) throw new Error("not posted");
+      return po.data;
+    } finally {
+      // Never leave typed text behind: Facebook would ask before closing.
+      if (box && !po.ok) {
+        try {
+          const editor = box.__lexicalEditor;
+          editor.setEditorState(editor.parseEditorState(JSON.stringify(lexicalState(""))));
+        } catch {
+          // the dialog is going away anyway
+        }
+      }
+      posting = null;
+      closeHidden(url);
+    }
+  }
+
+  function waitFor(test, ms) {
+    return new Promise((resolve) => {
+      const started = Date.now();
+      const tick = () => {
+        const v = test();
+        if (v || Date.now() - started > ms) resolve(v || null);
+        else requestAnimationFrame(tick);
+      };
+      tick();
+    });
+  }
+
+  // First re-sort on a page: Facebook only loads its comment list query when
+  // someone uses the sort menu, so do exactly that in the (hidden) dialog and
+  // read the response. Later re-sorts call the query directly.
+  async function sortThroughDialog(p, intents, intent) {
+    if (!intent || pending || posting) throw new Error("busy");
+    const titles = intents.map((i) => i.title);
+    const url = location.href;
+    const so = (sorting = { done: false, data: null });
+    root.setAttribute("data-fbc-cpending", "");
+    layerObserver.observe(document.body, { childList: true, subtree: true });
+    p.button.setAttribute("data-fbc-native", "");
+    p.button.click();
+    try {
+      const menuButton = await waitFor(() => {
+        const d = document.querySelector('[role="dialog"][aria-modal="true"]');
+        return d && [...d.querySelectorAll('[role="button"]')].find((b) => titles.includes(b.textContent.trim()));
+      }, 6000);
+      if (!menuButton) throw new Error("no sort menu");
+      menuButton.click();
+      const option = await waitFor(
+        () => [...document.querySelectorAll('[role="menuitem"], [role="menuitemradio"], [role="option"]')].find((m) => m.textContent.trim().startsWith(intent.title)),
+        3000
+      );
+      if (!option) throw new Error("no sort option");
+      option.click();
+      await waitFor(() => so.done, 8000);
+      if (!so.data) throw new Error("no response");
+      return so.data;
+    } finally {
+      sorting = null;
+      closeHidden(url);
+    }
+  }
+
+  async function resort(p, token) {
+    const s = t();
+    const before = p.panel.__fbcData;
+    const list = p.panel.querySelector(".fbc-cm-list");
+    if (list) {
+      list.textContent = "";
+      const status = el("div", "fbc-cm-status fbc-cm-loading");
+      status.setAttribute("role", "status");
+      status.append(el("span", "fbc-cm-spin"), el("span", "", s.loading));
+      list.append(status, el("div", "fbc-cm-bar"));
+    }
+    let data;
+    try {
+      const ready = typeof window.require === "function" && window.require("CommentListComponentsRootQuery.graphql");
+      const intent = before.intents.find((i) => i.token === token);
+      data = ready ? await fetchSorted(before.feedbackId, token) : await sortThroughDialog(p, before.intents, intent);
+    } catch {
+      if (list) {
+        list.textContent = "";
+        list.append(el("div", "fbc-cm-status", s.failed));
+      }
+      return;
+    }
+    if (!p.panel.isConnected) return;
+    // The ordering list comes with the first response; keep it, with the new
+    // choice selected.
+    data.feedbackId ||= before.feedbackId;
+    if (data.intents.length < 2) data.intents = before.intents.map((i) => ({ ...i, selected: i.token === token }));
+    render(p, data);
   }
 })();

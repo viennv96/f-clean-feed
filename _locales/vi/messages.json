@@ -164,5 +164,8 @@
   },
   "updateFailed": {
     "message": "Không kiểm tra được"
+  },
+  "updateCheckNow": {
+    "message": "Kiểm tra cập nhật"
   }
 }

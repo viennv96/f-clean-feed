@@ -28,12 +28,12 @@
 - **Quảng cáo khác:** Marketplace, kết quả tìm kiếm, cột phải.
 - **Giao diện:** nhắc sinh nhật, số đếm thông báo, chế độ gọn (ẩn 2 cột bên ở trang chủ).
 - **Không tự tải lại bảng tin** (bật sẵn): Facebook thường nạp lại bảng tin và nhảy về đầu trang khi bạn quay lại tab sau hơn 2 phút ở app khác. Tuỳ chọn này giữ nguyên chỗ bạn đang đọc, và không cho Chrome (Memory Saver) tạm tắt tab Facebook khi chạy nền.
-- **Xem bình luận ngay dưới bài** (bật sẵn): bấm *Bình luận* là bình luận hiện ngay dưới bài trên bảng tin, không mở hộp thoại. Bấm lần nữa để ẩn; *Viết bình luận* và *Xem tất cả* vẫn mở hộp thoại của Facebook.
+- **Xem bình luận ngay dưới bài** (bật sẵn): bấm *Bình luận* là bình luận hiện ngay dưới bài trên bảng tin, không mở hộp thoại. Có menu sắp xếp (Phù hợp nhất / Mới nhất / Tất cả, khi Facebook cho bài đó), ô viết bình luận ngay tại chỗ (Enter để gửi, Shift+Enter xuống dòng; chỉ chữ), và không trùng với bình luận Facebook đã hiện sẵn. Bấm lần nữa để ẩn; *Xem tất cả*, *N phản hồi*, ảnh và nhãn dán vẫn dùng hộp thoại của Facebook.
 - Popup tiếng Việt và tiếng Anh: mặc định theo ngôn ngữ của Chrome, đổi bằng công tắc **VI / EN** ở đầu popup.
 - Hai chế độ: xoá khỏi trang, hoặc thu gọn (bấm để xem lại). Thống kê theo ngày và tổng.
 - Quảng cáo bị ẩn trước khi trình duyệt kịp vẽ, nên không có hiện tượng "nháy" quảng cáo.
 - Không máy chủ, không analytics, không mã bên thứ ba. Chỉ cần quyền `storage` và `alarms`, chỉ chạy trên facebook.com.
-- **Nhắc cập nhật** (bản cài từ GitHub): mỗi 6 giờ kiểm tra bản phát hành mới nhất trên GitHub; có bản mới thì biểu tượng hiện nhãn **NEW** và popup có hướng dẫn 3 bước: tải zip, giải nén chép đè, bấm *Cập nhật ngay* (extension tự tải lại, không cần vào `chrome://extensions`). Bấm số phiên bản ở cuối popup để kiểm tra ngay.
+- **Nhắc cập nhật** (bản cài từ GitHub): mỗi giờ, khi mở Chrome và khi mở popup, kiểm tra bản phát hành mới nhất trên GitHub; có bản mới thì biểu tượng hiện nhãn **NEW** và popup có hướng dẫn 3 bước: tải zip, giải nén chép đè, bấm *Cập nhật ngay* (extension tự tải lại, không cần vào `chrome://extensions`). Bấm số phiên bản ở cuối popup để kiểm tra ngay.
 - Một thẻ quảng cáo nhỏ cho **MMO VPS** ([viennv.dev](https://viennv.dev), dịch vụ VPS của tác giả) ở cột phải trang chủ, đúng chỗ khối "Được tài trợ" của Facebook vừa bị ẩn. Thẻ có nhãn "Quảng cáo", hiển thị theo ngôn ngữ của Facebook, không tải gì từ mạng (logo được đóng gói sẵn). Bấm × để ẩn 7 ngày, hoặc tắt hẳn ở mục *Thẻ giới thiệu của tác giả* trong popup.
 
 ## Cài đặt
@@ -51,7 +51,7 @@
 
 | File | Vai trò |
 |---|---|
-| `background.js` | Service worker: giữ tab Facebook không bị Memory Saver tắt khi bật "Không tự tải lại bảng tin", và kiểm tra bản mới trên GitHub (API công khai, mỗi 6 giờ) cho bản cài thủ công. |
+| `background.js` | Service worker: giữ tab Facebook không bị Memory Saver tắt khi bật "Không tự tải lại bảng tin", và kiểm tra bản mới trên GitHub (API công khai, mỗi giờ và khi mở popup) cho bản cài thủ công. |
 | `content/main.js` | Chạy trong MAIN world. Tìm từng bài trong `[role=main] div[data-virtualized]` (bố cục hiện tại) hoặc `[role=feed] > div` (bố cục cũ), ngay trong callback của MutationObserver, tức là trước khi trang được vẽ. Nhận diện quảng cáo bằng cách lần theo chuỗi SVG `<use>` vẽ nhãn "Được tài trợ"/"Sponsored"; dự phòng bằng React fiber, `aria-labelledby`, link `/ads/about`, tiêu đề đa ngôn ngữ, link `/friends/suggestions`, `/groups/discover`, `/reel/`. Chỉ gắn `data-fbc-kind`, không xoá node. |
 | `content/comments.js` | MAIN world: khi bấm *Bình luận*, đọc bình luận từ chính truy vấn mà hộp thoại bài viết của Facebook gửi đi, đóng hộp thoại (được giấu trong lúc tải) và vẽ bình luận ngay dưới bài. Lỗi bất kỳ thì hộp thoại hiện như bình thường. |
 | `content/bridge.js` | Isolated world: đọc cài đặt từ `chrome.storage.sync`, ghi danh sách loại cần ẩn lên `<html data-fbc-hide="…">`, gom thống kê rồi ghi mỗi 2 giây, và đặt thẻ MMO VPS vào cột phải. |
@@ -75,6 +75,11 @@ sh store/build.sh
 ```
 
 ## Lịch sử phiên bản
+
+**1.5.0**
+- Khung bình luận dưới bài có **menu sắp xếp** (Phù hợp nhất / Mới nhất / Tất cả bình luận, khi Facebook cho bài đó) và **ô viết bình luận** ngay tại chỗ: Enter để gửi, Shift+Enter xuống dòng; bình luận được Facebook đăng như khi viết trong hộp thoại.
+- Không còn trùng với bình luận, ô nhập và nút "Xem thêm bình luận" mà Facebook hiện sẵn dưới bài; nút đó giờ mở khung bình luận thay vì hộp thoại.
+- Popup có nút **Kiểm tra cập nhật**; extension tự kiểm tra mỗi giờ và khi mở popup (thay vì mỗi 6 giờ).
 
 **1.4.1**
 - Sửa "Xem bình luận ngay dưới bài": hộp thoại bài viết đôi khi vẫn hiện lên sau khi tải xong (thường ở bài chưa có bình luận trong nhóm), và có lúc trang bị lùi về trang trước. Giờ hộp thoại luôn được đóng bằng chính Facebook, thử lại đến khi đóng hẳn.

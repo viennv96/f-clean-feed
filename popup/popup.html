@@ -71,7 +71,13 @@
     <span data-i18n="footerPrivacy"></span>
     <button id="reset" class="link" data-i18n="statsReset"></button>
   </footer>
-  <p class="author"><span data-i18n="authorBy"></span> <a href="https://viennv.dev" target="_blank" rel="noopener">Nguyễn Văn Viên</a></p>
+  <p class="author">
+    <span><span data-i18n="authorBy"></span> <a href="https://viennv.dev" target="_blank" rel="noopener">Nguyễn Văn Viên</a></span>
+    <button id="check-update" class="check" type="button">
+      <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 4v7h-7"/></svg>
+      <span id="check-label" data-i18n="updateCheckNow"></span>
+    </button>
+  </p>
 
   <template id="kind-row">
     <label class="row">

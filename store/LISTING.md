@@ -43,7 +43,7 @@ WHAT IT HIDES
 • Birthday reminders and notification counters (optional)
 • Clean mode: hide both side columns on the home page for a focused, centred feed
 • Keep your place: stop Facebook reloading the feed when you come back to the tab
-• Comments under the post: the Comment button shows comments right in the feed instead of opening a dialog
+• Comments under the post: the Comment button shows comments right in the feed instead of opening a dialog, with sorting and a box to write a comment in place
 
 HOW IT WORKS
 • Every filter is a single switch. Changes apply instantly, with no reload.
@@ -77,7 +77,7 @@ F Clean Feed giúp bảng tin Facebook gọn gàng hơn: chỉ còn bạn bè, n
 • Nhắc sinh nhật và số đếm thông báo – tuỳ chọn
 • Chế độ gọn: ẩn hai cột bên ở trang chủ để bảng tin nằm giữa, tập trung hơn
 • Không tự tải lại bảng tin khi quay lại tab, giữ nguyên chỗ đang đọc
-• Xem bình luận ngay dưới bài: bấm Bình luận là hiện bình luận trên bảng tin, không mở hộp thoại
+• Xem bình luận ngay dưới bài: bấm Bình luận là hiện bình luận trên bảng tin, có sắp xếp và ô viết bình luận ngay tại chỗ, không mở hộp thoại
 
 CÁCH DÙNG
 • Mỗi bộ lọc là một công tắc, có hiệu lực ngay, không cần tải lại trang.
@@ -108,7 +108,7 @@ F Clean Feed hides unwanted units on facebook.com – sponsored posts, recommend
 
 | Quyền | Lý do (dán vào ô tương ứng) |
 |---|---|
-| `alarms` | Schedules a check for a newer release every 6 hours. Only copies installed from GitHub run it; Web Store copies (with update_url) skip it. |
+| `alarms` | Schedules a check for a newer release every hour. Only copies installed from GitHub run it; Web Store copies (with update_url) skip it. |
 | `storage` | Stores the user's filter settings (chrome.storage.sync) and local counters of how many items were hidden (chrome.storage.local). No personal data is stored. |
 | Host permission `https://www.facebook.com/*`, `https://web.facebook.com/*` | Content scripts must run on facebook.com to detect and hide sponsored and recommended units. The extension does not run on any other site. |
 
