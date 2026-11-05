@@ -43,6 +43,7 @@ WHAT IT HIDES
 • Birthday reminders and notification counters (optional)
 • Clean mode: hide both side columns on the home page for a focused, centred feed
 • Keep your place: stop Facebook reloading the feed when you come back to the tab
+• Comments under the post: the Comment button shows comments right in the feed instead of opening a dialog
 
 HOW IT WORKS
 • Every filter is a single switch. Changes apply instantly, with no reload.
@@ -76,6 +77,7 @@ F Clean Feed giúp bảng tin Facebook gọn gàng hơn: chỉ còn bạn bè, n
 • Nhắc sinh nhật và số đếm thông báo – tuỳ chọn
 • Chế độ gọn: ẩn hai cột bên ở trang chủ để bảng tin nằm giữa, tập trung hơn
 • Không tự tải lại bảng tin khi quay lại tab, giữ nguyên chỗ đang đọc
+• Xem bình luận ngay dưới bài: bấm Bình luận là hiện bình luận trên bảng tin, không mở hộp thoại
 
 CÁCH DÙNG
 • Mỗi bộ lọc là một công tắc, có hiệu lực ngay, không cần tải lại trang.

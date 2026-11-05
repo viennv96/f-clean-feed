@@ -127,6 +127,9 @@
   "kind_keepFeed": {
     "message": "Don't reload feed on return"
   },
+  "kind_inlineComments": {
+    "message": "Show comments under the post"
+  },
   "kind_showPromo": {
     "message": "Developer's card"
   }

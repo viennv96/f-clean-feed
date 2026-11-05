@@ -1,7 +1,34 @@
 import { DEFAULTS } from "../content/settings.js";
 
-const t = (key, sub) => chrome.i18n.getMessage(key, sub);
 const $ = (sel) => document.querySelector(sel);
+
+const { settings: stored } = await chrome.storage.sync.get("settings");
+let settings = { ...DEFAULTS, ...stored, kinds: { ...DEFAULTS.kinds, ...(stored && stored.kinds) } };
+
+// Language: the VI / EN switch in the header, otherwise Chrome's UI language.
+// Strings come from the extension's own _locales so the switch works whatever
+// language Chrome itself uses.
+const uiLang =
+  settings.lang === "vi" || settings.lang === "en"
+    ? settings.lang
+    : ((chrome.i18n.getUILanguage && chrome.i18n.getUILanguage()) || navigator.language || "").toLowerCase().startsWith("vi")
+      ? "vi"
+      : "en";
+let messages = {};
+try {
+  messages = await (await fetch(chrome.runtime.getURL(`_locales/${uiLang}/messages.json`))).json();
+} catch {
+  // Fall back to chrome.i18n below.
+}
+const t = (key, sub) => {
+  const m = messages[key];
+  if (!m) return chrome.i18n.getMessage(key, sub);
+  return m.message.replace(/\$([A-Za-z_]+)\$/g, (_, name) => {
+    const ph = m.placeholders && m.placeholders[name.toLowerCase()];
+    return ph && ph.content === "$1" ? String(sub ?? "") : "";
+  });
+};
+document.documentElement.lang = uiLang;
 
 for (const el of document.querySelectorAll("[data-i18n]")) el.textContent = t(el.dataset.i18n);
 $("#version").textContent = `v${chrome.runtime.getManifest().version}`;
@@ -21,6 +48,7 @@ const ICONS = {
   birthdays: I('<path d="M4 20h16v-6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2z"/><path d="M4 16c1.3 1 2.7 1 4 0s2.7-1 4 0 2.7 1 4 0 2.7-1 4 0"/><path d="M12 12V8"/><path d="M12 5.5c.8-.6 1-1.5.3-2.5-.9 1-1.4 1.8-.3 2.5z"/>'),
   badges: I('<path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20.5a2 2 0 0 0 4 0"/>'),
   keepFeed: I('<path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 4v7h-7"/><rect x="9.5" y="9.5" width="5" height="5" rx="1"/>'),
+  inlineComments: I('<path d="M4 5h16v10H9l-5 4z"/><path d="M8 9h8M8 12h5"/>'),
   showPromo: '<img src="../icons/mmovps.png" alt="" width="18" height="18">',
   clean: I('<rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="M8.5 4v16M15.5 4v16" stroke-dasharray="2 2.4"/>'),
 };
@@ -30,7 +58,7 @@ const ICONS = {
 const GROUPS = [
   ["groupFeed", ["sponsored", "suggested", "reels", "allowFriendReels", "pymk", "groups", "stories"]],
   ["groupAds", ["market", "search", "rail"]],
-  ["groupLayout", ["birthdays", "badges", "clean", "keepFeed", "showPromo"]],
+  ["groupLayout", ["birthdays", "badges", "clean", "keepFeed", "inlineComments", "showPromo"]],
 ];
 
 // Headline breakdown buckets, summed from per-kind totals.
@@ -40,10 +68,9 @@ const BUCKETS = {
   "#b-reels": ["reels"],
 };
 
-let settings = DEFAULTS;
 const rows = {};
 
-const OPTIONS = new Set(["allowFriendReels", "keepFeed", "showPromo"]);
+const OPTIONS = new Set(["allowFriendReels", "keepFeed", "inlineComments", "showPromo"]);
 const isOption = (key) => OPTIONS.has(key);
 const valueOf = (key) => (isOption(key) ? settings[key] : settings.kinds[key]);
 const fmt = (n) => (n || 0).toLocaleString();
@@ -113,8 +140,18 @@ for (const b of document.querySelectorAll("[data-mode]")) {
 }
 $("#reset").addEventListener("click", () => chrome.storage.local.set({ stats: {} }));
 
-const { settings: stored } = await chrome.storage.sync.get("settings");
-settings = { ...DEFAULTS, ...stored, kinds: { ...DEFAULTS.kinds, ...(stored && stored.kinds) } };
+for (const b of document.querySelectorAll("[data-lang]")) {
+  const on = b.dataset.lang === uiLang;
+  b.classList.toggle("on", on);
+  b.setAttribute("aria-checked", on);
+  b.addEventListener("click", async () => {
+    if (b.dataset.lang === uiLang) return;
+    settings = { ...settings, lang: b.dataset.lang };
+    await chrome.storage.sync.set({ settings });
+    location.reload();
+  });
+}
+
 render();
 renderStats((await chrome.storage.local.get("stats")).stats);
 chrome.storage.onChanged.addListener((changes, area) => {

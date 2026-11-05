@@ -21,8 +21,8 @@
     },
   });
   window.chrome = {
-    i18n: { getMessage: (k, sub) => (messages[k]?.message ?? `?${k}`).replace(/\$COUNT\$/g, sub ?? "") },
-    runtime: { getManifest: () => ({ version: "1.0.0" }) },
+    i18n: { getUILanguage: () => lang, getMessage: (k, sub) => (messages[k]?.message ?? `?${k}`).replace(/\$COUNT\$/g, sub ?? "") },
+    runtime: { getManifest: () => ({ version: "1.0.0" }), getURL: (p) => `../${p}` },
     storage: { sync: area("sync"), local: area("local"), onChanged: { addListener: (l) => listeners.push(l) } },
   };
   window.__areas = areas;

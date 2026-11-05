@@ -28,6 +28,8 @@
 - **Quảng cáo khác:** Marketplace, kết quả tìm kiếm, cột phải.
 - **Giao diện:** nhắc sinh nhật, số đếm thông báo, chế độ gọn (ẩn 2 cột bên ở trang chủ).
 - **Không tự tải lại bảng tin** (bật sẵn): Facebook thường nạp lại bảng tin và nhảy về đầu trang khi bạn quay lại tab sau hơn 2 phút ở app khác. Tuỳ chọn này giữ nguyên chỗ bạn đang đọc, và không cho Chrome (Memory Saver) tạm tắt tab Facebook khi chạy nền.
+- **Xem bình luận ngay dưới bài** (bật sẵn): bấm *Bình luận* là bình luận hiện ngay dưới bài trên bảng tin, không mở hộp thoại. Bấm lần nữa để ẩn; *Viết bình luận* và *Xem tất cả* vẫn mở hộp thoại của Facebook.
+- Popup tiếng Việt và tiếng Anh: mặc định theo ngôn ngữ của Chrome, đổi bằng công tắc **VI / EN** ở đầu popup.
 - Hai chế độ: xoá khỏi trang, hoặc thu gọn (bấm để xem lại). Thống kê theo ngày và tổng.
 - Quảng cáo bị ẩn trước khi trình duyệt kịp vẽ, nên không có hiện tượng "nháy" quảng cáo.
 - Không máy chủ, không analytics, không mã bên thứ ba. Chỉ cần quyền `storage` và chỉ chạy trên facebook.com.
@@ -50,6 +52,7 @@
 |---|---|
 | `content/main.js` | Chạy trong MAIN world. Tìm từng bài trong `[role=main] div[data-virtualized]` (bố cục hiện tại) hoặc `[role=feed] > div` (bố cục cũ), ngay trong callback của MutationObserver, tức là trước khi trang được vẽ. Nhận diện quảng cáo bằng cách lần theo chuỗi SVG `<use>` vẽ nhãn "Được tài trợ"/"Sponsored"; dự phòng bằng React fiber, `aria-labelledby`, link `/ads/about`, tiêu đề đa ngôn ngữ, link `/friends/suggestions`, `/groups/discover`, `/reel/`. Chỉ gắn `data-fbc-kind`, không xoá node. |
 | `background.js` | Service worker: đánh dấu tab Facebook không được tự tắt (Memory Saver) khi bật "Không tự tải lại bảng tin". |
+| `content/comments.js` | MAIN world: khi bấm *Bình luận*, đọc bình luận từ chính truy vấn mà hộp thoại bài viết của Facebook gửi đi, đóng hộp thoại (được giấu trong lúc tải) và vẽ bình luận ngay dưới bài. Lỗi bất kỳ thì hộp thoại hiện như bình thường. |
 | `content/bridge.js` | Isolated world: đọc cài đặt từ `chrome.storage.sync`, ghi danh sách loại cần ẩn lên `<html data-fbc-hide="…">`, gom thống kê rồi ghi mỗi 2 giây, và đặt thẻ MMO VPS vào cột phải. |
 | `content/hide.css` | Quyết định ẩn bằng CSS thuần, nên bật/tắt có hiệu lực ngay, không phải quét lại. |
 | `popup/` | Popup HTML/JS thuần, không dùng framework. |
@@ -71,6 +74,10 @@ sh store/build.sh
 ```
 
 ## Lịch sử phiên bản
+
+**1.3.0**
+- Tuỳ chọn mới "Xem bình luận ngay dưới bài" (bật sẵn): bấm *Bình luận* là bình luận hiện ngay dưới bài trên bảng tin, có ảnh/nhãn dán và hiệu ứng đang tải, không mở hộp thoại. *Viết bình luận*, *Xem tất cả* và *N phản hồi* vẫn mở hộp thoại của Facebook.
+- Popup có tiếng Việt và tiếng Anh, đổi bằng công tắc VI / EN (mặc định theo ngôn ngữ của Chrome).
 
 **1.2.0**
 - Tuỳ chọn mới "Không tự tải lại bảng tin" (bật sẵn): Facebook không còn nạp lại bảng tin và nhảy về đầu trang khi bạn quay lại tab sau vài phút ở app khác.

@@ -9,6 +9,7 @@
     allowFriendReels: false,
     showPromo: true,
     keepFeed: true,
+    inlineComments: true,
     kinds: {
       sponsored: true, suggested: true, reels: true, pymk: true, groups: true, stories: false,
       market: true, search: true, rail: true, birthdays: false, badges: false, clean: false,
@@ -51,6 +52,7 @@
     // worker keeps the tab from being discarded by Chrome's Memory Saver.
     const keep = Boolean(settings.enabled && settings.keepFeed);
     root.toggleAttribute("data-fbc-keep", keep);
+    root.toggleAttribute("data-fbc-inline", Boolean(settings.enabled && settings.inlineComments));
     if (keep !== keepTab) {
       keepTab = keep;
       try {

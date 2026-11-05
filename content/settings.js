@@ -11,6 +11,8 @@ export const DEFAULTS = {
   allowFriendReels: false,
   showPromo: true, // developer's card in the right column (content/bridge.js)
   keepFeed: true, // stop Facebook reloading the home feed when you come back to the tab
+  lang: "auto", // popup language: "auto" (Chrome UI), "vi" or "en"
+  inlineComments: true, // Comment shows the comments under the post (content/comments.js)
   kinds: {
     sponsored: true, suggested: true, reels: true, pymk: true, groups: true, stories: false,
     market: true, search: true, rail: true, birthdays: false, badges: false, clean: false,

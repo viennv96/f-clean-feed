@@ -127,6 +127,9 @@
   "kind_keepFeed": {
     "message": "Không tự tải lại bảng tin"
   },
+  "kind_inlineComments": {
+    "message": "Xem bình luận ngay dưới bài"
+  },
   "kind_showPromo": {
     "message": "Thẻ giới thiệu của tác giả"
   }
