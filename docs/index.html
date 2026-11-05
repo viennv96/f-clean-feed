@@ -431,7 +431,11 @@
     const KEY = "fcf-dl";
     try {
       const c = JSON.parse(localStorage.getItem(KEY));
-      if (c && Date.now() - c.at < 3600e3) { downloads = c; return renderDownloads(); }
+      // The page's own version (JSON-LD, written by store/src/site.mjs) wins:
+      // a cache from before a release is dropped straight away.
+      let pageVersion = "";
+      try { pageVersion = JSON.parse(document.getElementById("ld-app").textContent).softwareVersion || ""; } catch (e) {}
+      if (c && Date.now() - c.at < 3600e3 && (!pageVersion || c.version === pageVersion)) { downloads = c; return renderDownloads(); }
     } catch (e) {}
     try {
       const r = await fetch("https://api.github.com/repos/viennv96/f-clean-feed/releases?per_page=100");
