@@ -7,6 +7,7 @@
     enabled: true,
     mode: "hide",
     allowFriendReels: false,
+    showPromo: true,
     kinds: {
       sponsored: true, suggested: true, reels: true, pymk: true, groups: true, stories: false,
       market: true, search: true, rail: true, birthdays: false, badges: false, clean: false,
@@ -28,6 +29,12 @@
   const root = document.documentElement;
   let settings = DEFAULTS;
   let hidden = new Set();
+  // Developer's card state (see placePromo below); declared up here because
+  // apply() runs before the rest of the file.
+  const PROMO_URL = "https://viennv.dev";
+  const PROMO_SNOOZE_MS = 7 * 24 * 60 * 60 * 1000;
+  let promoSnoozedUntil = 0;
+  let promoCard = null;
 
   function apply(s) {
     settings = { ...DEFAULTS, ...s, kinds: { ...DEFAULTS.kinds, ...(s && s.kinds) } };
@@ -37,12 +44,18 @@
     if (hidden.has("reels") && !settings.allowFriendReels) hidden.add("reelpost");
     root.setAttribute("data-fbc-hide", [...hidden].join(" "));
     root.setAttribute("data-fbc-mode", settings.mode);
+    placePromo();
   }
 
   apply(DEFAULTS);
   chrome.storage.sync.get("settings").then(({ settings: s }) => apply(s));
   chrome.storage.onChanged.addListener((changes, area) => {
     if (area === "sync" && changes.settings) apply(changes.settings.newValue);
+    // Closing the card in one tab hides it in every open Facebook tab.
+    if (area === "local" && changes.promoSnoozedUntil) {
+      promoSnoozedUntil = changes.promoSnoozedUntil.newValue || 0;
+      placePromo();
+    }
   });
 
   // Stats are buffered and flushed at most every 2s to keep storage writes cheap.
@@ -81,6 +94,8 @@
     }
     // Badges and layout chrome are not "blocked items"; keep them out of stats.
     if (kind !== "badges" && kind !== "clean") count(kind);
+    // The right column just got classified: the promo card's anchor exists now.
+    if (kind === "rail" || kind === "birthdays") placePromo();
   });
 
   // Collapse mode: clicking the placeholder reveals that one unit.
@@ -96,4 +111,79 @@
     },
     true
   );
+  // ---- Developer's card -------------------------------------------------------
+  // One card for viennv.dev in the right column of the home page, placed where
+  // Facebook's own "Sponsored" block sits (which this extension usually hides).
+  // It is labelled as an ad, never enters the news feed, can be snoozed for a
+  // week with its close button and switched off in the popup ("showPromo").
+  function node(tag, className, text) {
+    const el = document.createElement(tag);
+    if (className) el.className = className;
+    if (text) el.textContent = text;
+    return el;
+  }
+  // The card sits inside Facebook's UI, so it follows Facebook's language
+  // (<html lang>) rather than Chrome's, which chrome.i18n would use.
+  const PROMO_TEXT = {
+    vi: { label: "Quảng cáo", title: "MMO VPS", text: "Máy chủ ảo, proxy tĩnh · nhận máy trong vài phút", cta: "Xem gói", dismiss: "Ẩn trong 7 ngày" },
+    en: { label: "Ad", title: "MMO VPS", text: "VPS & static proxies · ready in minutes", cta: "See plans", dismiss: "Hide for 7 days" },
+  };
+
+  // Built with DOM APIs only (no innerHTML), so Facebook's Trusted Types
+  // policy has nothing to object to.
+  function buildPromo() {
+    const strings = PROMO_TEXT[(root.lang || "").toLowerCase().startsWith("vi") ? "vi" : "en"];
+    const t = (k) => strings[k];
+    const card = node("aside", "fbc-promo");
+    card.setAttribute("aria-label", t("label"));
+
+    const head = node("div", "fbc-promo-head");
+    head.append(node("span", "fbc-promo-tag", t("label")), node("span", "fbc-promo-domain", "viennv.dev"));
+    const close = node("button", "fbc-promo-close", "×");
+    close.type = "button";
+    close.title = t("dismiss");
+    close.setAttribute("aria-label", t("dismiss"));
+    close.addEventListener("click", (e) => {
+      e.preventDefault();
+      promoSnoozedUntil = Date.now() + PROMO_SNOOZE_MS;
+      chrome.storage.local.set({ promoSnoozedUntil });
+      placePromo();
+    });
+    head.append(close);
+
+    const body = node("a", "fbc-promo-body");
+    body.href = PROMO_URL;
+    body.target = "_blank";
+    body.rel = "noopener";
+    const logo = node("span", "fbc-promo-logo");
+    logo.setAttribute("role", "img");
+    logo.setAttribute("aria-label", "MMO VPS");
+    const text = node("span", "fbc-promo-text");
+    text.append(node("b", "", t("title")), node("span", "", t("text")));
+    body.append(logo, text, node("span", "fbc-promo-cta", t("cta")));
+
+    card.append(head, body);
+    return card;
+  }
+
+  function placePromo() {
+    const wanted =
+      settings.enabled && settings.showPromo && Date.now() >= promoSnoozedUntil && root.hasAttribute("data-fbc-home");
+    // Facebook's sponsored block when there is one, else the birthdays block.
+    const anchor = wanted && document.querySelector('[data-fbc-kind="rail"], [data-fbc-kind="birthdays"]');
+    if (!anchor || !anchor.parentElement) {
+      promoCard?.remove();
+      return;
+    }
+    promoCard ||= buildPromo();
+    if (promoCard.nextElementSibling !== anchor) anchor.parentElement.insertBefore(promoCard, anchor);
+  }
+
+  chrome.storage.local.get("promoSnoozedUntil").then(({ promoSnoozedUntil: until }) => {
+    promoSnoozedUntil = until || 0;
+    placePromo();
+  });
+  // The right column is re-rendered now and then, and SPA navigation leaves
+  // or returns to the home page; a cheap periodic check keeps the card right.
+  setInterval(placePromo, 1000);
 })();

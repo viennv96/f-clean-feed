@@ -20,6 +20,7 @@ const ICONS = {
   rail: I('<rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="M15 4v16"/><path d="M17.5 8.5h1M17.5 12h1"/>'),
   birthdays: I('<path d="M4 20h16v-6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2z"/><path d="M4 16c1.3 1 2.7 1 4 0s2.7-1 4 0 2.7 1 4 0 2.7-1 4 0"/><path d="M12 12V8"/><path d="M12 5.5c.8-.6 1-1.5.3-2.5-.9 1-1.4 1.8-.3 2.5z"/>'),
   badges: I('<path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20.5a2 2 0 0 0 4 0"/>'),
+  showPromo: '<img src="../icons/mmovps.png" alt="" width="18" height="18">',
   clean: I('<rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="M8.5 4v16M15.5 4v16" stroke-dasharray="2 2.4"/>'),
 };
 
@@ -28,7 +29,7 @@ const ICONS = {
 const GROUPS = [
   ["groupFeed", ["sponsored", "suggested", "reels", "allowFriendReels", "pymk", "groups", "stories"]],
   ["groupAds", ["market", "search", "rail"]],
-  ["groupLayout", ["birthdays", "badges", "clean"]],
+  ["groupLayout", ["birthdays", "badges", "clean", "showPromo"]],
 ];
 
 // Headline breakdown buckets, summed from per-kind totals.
@@ -41,7 +42,8 @@ const BUCKETS = {
 let settings = DEFAULTS;
 const rows = {};
 
-const isOption = (key) => key === "allowFriendReels";
+const OPTIONS = new Set(["allowFriendReels", "showPromo"]);
+const isOption = (key) => OPTIONS.has(key);
 const valueOf = (key) => (isOption(key) ? settings[key] : settings.kinds[key]);
 const fmt = (n) => (n || 0).toLocaleString();
 
@@ -84,7 +86,7 @@ for (const [title, keys] of GROUPS) {
     const el = tpl.content.firstElementChild.cloneNode(true);
     el.querySelector(".name").textContent = t(`kind_${key}`);
     if (ICONS[key]) el.querySelector(".ico").innerHTML = ICONS[key];
-    if (isOption(key)) el.classList.add("sub");
+    if (key === "allowFriendReels") el.classList.add("sub");
     const input = el.querySelector("input");
     input.addEventListener("change", () => {
       settings = isOption(key)

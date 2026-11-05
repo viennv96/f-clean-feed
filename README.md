@@ -25,6 +25,7 @@
 - Hai chế độ: xoá khỏi trang, hoặc thu gọn (bấm để xem lại). Thống kê theo ngày và tổng.
 - Quảng cáo bị ẩn trước khi trình duyệt kịp vẽ, nên không có hiện tượng "nháy" quảng cáo.
 - Không máy chủ, không analytics, không mã bên thứ ba. Chỉ cần quyền `storage` và chỉ chạy trên facebook.com.
+- Một thẻ quảng cáo nhỏ cho **MMO VPS** ([viennv.dev](https://viennv.dev), dịch vụ VPS của tác giả) ở cột phải trang chủ, đúng chỗ khối "Được tài trợ" của Facebook vừa bị ẩn. Thẻ có nhãn "Quảng cáo", hiển thị theo ngôn ngữ của Facebook, không tải gì từ mạng (logo được đóng gói sẵn). Bấm × để ẩn 7 ngày, hoặc tắt hẳn ở mục *Thẻ giới thiệu của tác giả* trong popup.
 
 ## Cài đặt
 
@@ -42,7 +43,7 @@
 | File | Vai trò |
 |---|---|
 | `content/main.js` | Chạy trong MAIN world. Tìm từng bài trong `[role=main] div[data-virtualized]` (bố cục hiện tại) hoặc `[role=feed] > div` (bố cục cũ), ngay trong callback của MutationObserver, tức là trước khi trang được vẽ. Nhận diện quảng cáo bằng cách lần theo chuỗi SVG `<use>` vẽ nhãn "Được tài trợ"/"Sponsored"; dự phòng bằng React fiber, `aria-labelledby`, link `/ads/about`, tiêu đề đa ngôn ngữ, link `/friends/suggestions`, `/groups/discover`, `/reel/`. Chỉ gắn `data-fbc-kind`, không xoá node. |
-| `content/bridge.js` | Isolated world: đọc cài đặt từ `chrome.storage.sync`, ghi danh sách loại cần ẩn lên `<html data-fbc-hide="…">`, gom thống kê rồi ghi mỗi 2 giây. |
+| `content/bridge.js` | Isolated world: đọc cài đặt từ `chrome.storage.sync`, ghi danh sách loại cần ẩn lên `<html data-fbc-hide="…">`, gom thống kê rồi ghi mỗi 2 giây, và đặt thẻ MMO VPS vào cột phải. |
 | `content/hide.css` | Quyết định ẩn bằng CSS thuần, nên bật/tắt có hiệu lực ngay, không phải quét lại. |
 | `popup/` | Popup HTML/JS thuần, không dùng framework. |
 | `docs/` | Website (GitHub Pages) và chính sách quyền riêng tư. |
@@ -52,6 +53,7 @@
 
 - `test/fixture.html`: bảng tin giả, mô phỏng cả bố cục cũ và mới của Facebook.
 - `test/popup.html`: hiển thị popup với `chrome.*` giả lập (`?lang=en` cho tiếng Anh).
+- `test/promo.html`: cột phải giả để thử thẻ MMO VPS (vị trí, nút ×, công tắc trong popup).
 
 Phục vụ thư mục này qua một static server bất kỳ ở cổng 8765, mở `/test/fixture.html` rồi chờ khoảng 6 giây. Gọi `window.__fbcDebug(el)` để xem một bài được phân loại thế nào; trên Facebook thật cũng gọi được hàm này trong DevTools.
 
@@ -61,9 +63,20 @@ Build ảnh store, gói zip và cập nhật ảnh cho website (cần server ở
 sh store/build.sh
 ```
 
+## Lịch sử phiên bản
+
+**1.1.0**
+- Thẻ quảng cáo MMO VPS (viennv.dev) ở cột phải trang chủ, có logo, nút × ẩn 7 ngày và công tắc tắt trong popup.
+- Logo MMO VPS trong popup và website.
+
+**1.0.0**
+- Phát hành đầu tiên: chặn bài tài trợ, gợi ý, Reels, Tin, PYMK, nhóm gợi ý, quảng cáo Marketplace/tìm kiếm/cột phải; chế độ gọn; thống kê.
+
 ## Tác giả
 
-[Nguyễn Văn Viên](https://viennv.dev). Cần VPS tốc độ cao? Xem [viennv.dev](https://viennv.dev).
+[Nguyễn Văn Viên](https://viennv.dev).
+
+<a href="https://viennv.dev"><img src="docs/assets/mmovps.png" width="20" alt=""> <b>MMO VPS</b></a>: máy chủ ảo, máy chủ livestream và proxy tĩnh, nhận máy trong vài phút tại [viennv.dev](https://viennv.dev).
 
 ---
 

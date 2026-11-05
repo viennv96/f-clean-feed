@@ -116,12 +116,15 @@
     "message": "No data collected"
   },
   "promoTitle": {
-    "message": "Need a fast VPS?"
+    "message": "MMO VPS – fast & secure VPS"
   },
   "promoText": {
-    "message": "Reliable VPS hosting at viennv.dev"
+    "message": "VPS & static proxies · ready in minutes"
   },
   "authorBy": {
     "message": "Made by"
+  },
+  "kind_showPromo": {
+    "message": "Developer's card"
   }
 }

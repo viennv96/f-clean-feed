@@ -4,6 +4,7 @@ Mọi nội dung dưới đây dán thẳng vào [Chrome Web Store Developer Das
 
 ## 0. Trước khi nộp
 
+- [ ] **Thẻ quảng cáo trên trang Facebook:** chính sách Chrome Web Store cấm extension chèn quảng cáo vào trang của bên thứ ba, nhất là với một trình chặn quảng cáo. Trước khi nộp store, đặt `showPromo: false` trong `content/settings.js` và `content/bridge.js`, hoặc bỏ hẳn phần “Developer's card” trong `content/bridge.js`. Liên kết trong popup thì giữ được.
 - [ ] **Chạy thử trên Facebook thật.** Quảng cáo cột phải và khay Reels mới chỉ được test trên trang giả. Nộp bản chặn chưa sạch dễ bị đánh giá 1 sao ngay từ đầu.
 - [ ] Đăng ký tài khoản developer (phí một lần 5 USD) và bật xác minh 2 bước cho tài khoản Google.
 - [ ] Chính sách quyền riêng tư đã được đăng qua GitHub Pages: https://viennv96.github.io/f-clean-feed/privacy-policy.html (mở thử link trước khi nộp).
@@ -11,7 +12,7 @@ Mọi nội dung dưới đây dán thẳng vào [Chrome Web Store Developer Das
 
 ## 1. Gói tải lên
 
-`dist/f-clean-feed-1.0.0.zip` (cũng có trong GitHub Release `v1.0.0`) chỉ chứa `manifest.json`, `_locales/`, `content/`, `icons/`, `popup/`. Không có thư mục test hay tài nguyên store.
+`dist/f-clean-feed-<version>.zip` (cũng có trong GitHub Releases) chỉ chứa `manifest.json`, `_locales/`, `content/`, `icons/`, `popup/`. Không có thư mục test hay tài nguyên store.
 
 ## 2. Thông tin store (Store listing)
 
@@ -52,7 +53,7 @@ PRIVATE BY DESIGN
 • No servers, no analytics, no third-party code. Nothing you read ever leaves your browser.
 • Only runs on facebook.com, and only needs the "storage" permission to remember your settings.
 
-F Clean Feed is free. The popup includes a small link to the developer's VPS hosting service (viennv.dev); it only opens when you click it and never appears on Facebook pages.
+F Clean Feed is free. It shows one small card labelled “Ad” for the developer's VPS hosting service (viennv.dev) in the right column of the Facebook home page, plus a link in the popup. The card can be hidden for 7 days or turned off in the popup.
 
 Developer: Nguyễn Văn Viên – https://viennv.dev
 
@@ -84,7 +85,7 @@ RIÊNG TƯ NGAY TỪ THIẾT KẾ
 • Không máy chủ, không analytics, không mã bên thứ ba. Những gì bạn đọc không bao giờ rời khỏi trình duyệt.
 • Chỉ chạy trên facebook.com, chỉ cần quyền "storage" để nhớ cài đặt.
 
-F Clean Feed hoàn toàn miễn phí. Popup có một liên kết nhỏ tới dịch vụ VPS của nhà phát triển (viennv.dev); liên kết chỉ mở khi bạn bấm và không bao giờ xuất hiện trên trang Facebook.
+F Clean Feed hoàn toàn miễn phí. Extension hiển thị một thẻ nhỏ có nhãn “Quảng cáo” cho dịch vụ VPS của nhà phát triển (viennv.dev) ở cột phải trang chủ Facebook, và một liên kết trong popup. Có thể ẩn thẻ 7 ngày hoặc tắt hẳn trong popup.
 
 Nhà phát triển: Nguyễn Văn Viên – https://viennv.dev
 

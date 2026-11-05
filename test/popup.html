@@ -26,7 +26,8 @@
   window.__areas = areas;
   const html = await (await fetch("../popup/popup.html")).text();
   document.body.innerHTML = new DOMParser().parseFromString(html, "text/html").body.innerHTML.replace(/<script[\s\S]*?<\/script>/g, "");
-  document.querySelectorAll("img").forEach((i) => (i.src = "../icons/48.png"));
+  // Relative src values were written for popup/, one level up from this page.
+  document.querySelectorAll("img").forEach((i) => (i.src = new URL(i.getAttribute("src"), new URL("../popup/", location.href)).href));
   await import("../popup/popup.js");
 </script>
 </body>

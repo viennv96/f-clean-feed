@@ -116,12 +116,15 @@
     "message": "Không thu thập dữ liệu"
   },
   "promoTitle": {
-    "message": "Cần VPS tốc độ cao?"
+    "message": "MMO VPS – VPS tốc độ cao"
   },
   "promoText": {
-    "message": "Thuê VPS ổn định, giá tốt tại viennv.dev"
+    "message": "Máy chủ ảo, proxy tĩnh · nhận máy trong vài phút"
   },
   "authorBy": {
     "message": "Phát triển bởi"
+  },
+  "kind_showPromo": {
+    "message": "Thẻ giới thiệu của tác giả"
   }
 }

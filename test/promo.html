@@ -1,0 +1,37 @@
+<!doctype html>
+<!-- Developer's card in the right column: bridge.js + main.js with an in-memory chrome.* stub. -->
+<html>
+<head><meta charset="utf-8"><link rel="stylesheet" href="../content/hide.css">
+<style>body { font-family: system-ui; background: #f0f2f5; } [role="complementary"] { width: 340px; margin-left: auto; }</style>
+</head>
+<body>
+<div role="main"><div role="feed"></div></div>
+<div role="complementary" id="rail">
+  <div id="rail-list">
+    <div id="rail-ad"><h3>Được tài trợ</h3><a href="https://ads.example"><img alt="">Ad 1</a></div>
+    <div id="rail-bday"><h3>Sinh nhật</h3><a href="/events/birthdays">Hôm nay là sinh nhật của Dũng</a></div>
+    <div id="rail-contacts"><h3>Người liên hệ</h3><a href="/m">m</a></div>
+  </div>
+</div>
+<script>
+  // Minimal chrome.* for the isolated-world bridge, backed by memory.
+  const messages = {};
+  const store = { sync: {}, local: {} };
+  const listeners = [];
+  const area = (name) => ({
+    get: async (k) => ({ [k]: store[name][k] }),
+    set: async (o) => { for (const [k, v] of Object.entries(o)) { const oldValue = store[name][k]; store[name][k] = v; listeners.forEach((l) => l({ [k]: { oldValue, newValue: v } }, name)); } },
+  });
+  window.chrome = {
+    i18n: { getMessage: (k) => messages[k] ?? k },
+    storage: { sync: area("sync"), local: area("local"), onChanged: { addListener: (l) => listeners.push(l) } },
+  };
+  window.__store = store;
+  // The card only shows on the home page.
+  history.replaceState({}, "", "/");
+  fetch("/_locales/vi/messages.json").then((r) => r.json()).then((j) => { for (const k in j) messages[k] = j[k].message; });
+</script>
+<script src="/content/bridge.js"></script>
+<script src="/content/main.js"></script>
+</body>
+</html>
