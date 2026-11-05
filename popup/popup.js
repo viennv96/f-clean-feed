@@ -156,4 +156,44 @@ render();
 renderStats((await chrome.storage.local.get("stats")).stats);
 chrome.storage.onChanged.addListener((changes, area) => {
   if (area === "local" && changes.stats) renderStats(changes.stats.newValue);
+  if (area === "local" && changes.update) showUpdate(changes.update.newValue);
 });
+
+// ---- Updates (copies installed from GitHub) ---------------------------------
+// background.js checks the latest release every few hours; the popup shows
+// what it found, re-checks when the last check is over an hour old, and the
+// version number in the footer checks on demand. "Update now" reloads the
+// extension from its folder once the new files are in place.
+const current = chrome.runtime.getManifest().version;
+const isNewer = (a, b) => {
+  const pa = a.split(".").map(Number);
+  const pb = b.split(".").map(Number);
+  for (let i = 0; i < Math.max(pa.length, pb.length); i++) {
+    if ((pa[i] || 0) !== (pb[i] || 0)) return (pa[i] || 0) > (pb[i] || 0);
+  }
+  return false;
+};
+function showUpdate(update) {
+  const show = Boolean(update && update.version && isNewer(update.version, current));
+  $("#update").hidden = !show;
+  if (!show) return;
+  $("#update-title").textContent = t("updateTitle", update.version);
+  $("#update-notes").href = update.page;
+  $("#update-download").href = update.zip || update.page;
+}
+const versionButton = $("#version");
+versionButton.title = t("updateCheck");
+versionButton.addEventListener("click", async () => {
+  versionButton.textContent = t("updateChecking");
+  const res = await chrome.runtime.sendMessage({ type: "checkUpdate" }).catch(() => null);
+  if (res) showUpdate(res.update);
+  versionButton.textContent = !res || res.error ? t("updateFailed") : res.update ? `v${current}` : t("updateLatest");
+  setTimeout(() => (versionButton.textContent = `v${current}`), 2500);
+});
+$("#update-reload").addEventListener("click", () => chrome.runtime.reload());
+
+const { update, updateCheckedAt = 0 } = await chrome.storage.local.get(["update", "updateCheckedAt"]);
+showUpdate(update);
+if (Date.now() - updateCheckedAt > 60 * 60 * 1000) {
+  chrome.runtime.sendMessage({ type: "checkUpdate" }).then((res) => res && showUpdate(res.update)).catch(() => {});
+}

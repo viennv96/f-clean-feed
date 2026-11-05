@@ -32,7 +32,8 @@
 - Popup tiếng Việt và tiếng Anh: mặc định theo ngôn ngữ của Chrome, đổi bằng công tắc **VI / EN** ở đầu popup.
 - Hai chế độ: xoá khỏi trang, hoặc thu gọn (bấm để xem lại). Thống kê theo ngày và tổng.
 - Quảng cáo bị ẩn trước khi trình duyệt kịp vẽ, nên không có hiện tượng "nháy" quảng cáo.
-- Không máy chủ, không analytics, không mã bên thứ ba. Chỉ cần quyền `storage` và chỉ chạy trên facebook.com.
+- Không máy chủ, không analytics, không mã bên thứ ba. Chỉ cần quyền `storage` và `alarms`, chỉ chạy trên facebook.com.
+- **Nhắc cập nhật** (bản cài từ GitHub): mỗi 6 giờ kiểm tra bản phát hành mới nhất trên GitHub; có bản mới thì biểu tượng hiện nhãn **NEW** và popup có hướng dẫn 3 bước: tải zip, giải nén chép đè, bấm *Cập nhật ngay* (extension tự tải lại, không cần vào `chrome://extensions`). Bấm số phiên bản ở cuối popup để kiểm tra ngay.
 - Một thẻ quảng cáo nhỏ cho **MMO VPS** ([viennv.dev](https://viennv.dev), dịch vụ VPS của tác giả) ở cột phải trang chủ, đúng chỗ khối "Được tài trợ" của Facebook vừa bị ẩn. Thẻ có nhãn "Quảng cáo", hiển thị theo ngôn ngữ của Facebook, không tải gì từ mạng (logo được đóng gói sẵn). Bấm × để ẩn 7 ngày, hoặc tắt hẳn ở mục *Thẻ giới thiệu của tác giả* trong popup.
 
 ## Cài đặt
@@ -50,8 +51,8 @@
 
 | File | Vai trò |
 |---|---|
+| `background.js` | Service worker: giữ tab Facebook không bị Memory Saver tắt khi bật "Không tự tải lại bảng tin", và kiểm tra bản mới trên GitHub (API công khai, mỗi 6 giờ) cho bản cài thủ công. |
 | `content/main.js` | Chạy trong MAIN world. Tìm từng bài trong `[role=main] div[data-virtualized]` (bố cục hiện tại) hoặc `[role=feed] > div` (bố cục cũ), ngay trong callback của MutationObserver, tức là trước khi trang được vẽ. Nhận diện quảng cáo bằng cách lần theo chuỗi SVG `<use>` vẽ nhãn "Được tài trợ"/"Sponsored"; dự phòng bằng React fiber, `aria-labelledby`, link `/ads/about`, tiêu đề đa ngôn ngữ, link `/friends/suggestions`, `/groups/discover`, `/reel/`. Chỉ gắn `data-fbc-kind`, không xoá node. |
-| `background.js` | Service worker: đánh dấu tab Facebook không được tự tắt (Memory Saver) khi bật "Không tự tải lại bảng tin". |
 | `content/comments.js` | MAIN world: khi bấm *Bình luận*, đọc bình luận từ chính truy vấn mà hộp thoại bài viết của Facebook gửi đi, đóng hộp thoại (được giấu trong lúc tải) và vẽ bình luận ngay dưới bài. Lỗi bất kỳ thì hộp thoại hiện như bình thường. |
 | `content/bridge.js` | Isolated world: đọc cài đặt từ `chrome.storage.sync`, ghi danh sách loại cần ẩn lên `<html data-fbc-hide="…">`, gom thống kê rồi ghi mỗi 2 giây, và đặt thẻ MMO VPS vào cột phải. |
 | `content/hide.css` | Quyết định ẩn bằng CSS thuần, nên bật/tắt có hiệu lực ngay, không phải quét lại. |
@@ -74,6 +75,10 @@ sh store/build.sh
 ```
 
 ## Lịch sử phiên bản
+
+**1.4.0**
+- Nhắc cập nhật cho bản cài từ GitHub: kiểm tra bản mới mỗi 6 giờ, biểu tượng hiện nhãn NEW, popup hướng dẫn 3 bước (tải zip, chép đè, *Cập nhật ngay* để extension tự tải lại). Bấm số phiên bản ở cuối popup để kiểm tra ngay.
+- Thêm quyền `alarms` (hẹn giờ kiểm tra). Yêu cầu mạng duy nhất là hỏi GitHub API số phiên bản mới nhất, không gửi dữ liệu nào của bạn.
 
 **1.3.1**
 - Thẻ MMO VPS ở cột phải có lề 16px: thẳng hàng với avatar trên thanh đầu trang và các khối của cột phải, không còn sát thanh cuộn.

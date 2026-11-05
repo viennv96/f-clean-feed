@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- Renders popup/popup.html with an in-memory chrome.* stub. ?lang=en for English. -->
+<!-- Renders popup/popup.html with an in-memory chrome.* stub. ?lang=en for English, ?update=1 for the update banner. -->
 <html>
 <head><meta charset="utf-8"><link rel="stylesheet" href="../popup/popup.css">
 <!-- Screenshots are taken mid-load: no transitions, so switches never show a half-way state. -->
@@ -22,7 +22,16 @@
   });
   window.chrome = {
     i18n: { getUILanguage: () => lang, getMessage: (k, sub) => (messages[k]?.message ?? `?${k}`).replace(/\$COUNT\$/g, sub ?? "") },
-    runtime: { getManifest: () => ({ version: "1.0.0" }), getURL: (p) => `../${p}` },
+    runtime: {
+      getManifest: () => ({ version: "1.0.0" }),
+      getURL: (p) => `../${p}`,
+      // ?update=1 pretends GitHub has a newer release.
+      sendMessage: async (m) =>
+        m.type === "checkUpdate"
+          ? { checkedAt: Date.now(), update: new URLSearchParams(location.search).get("update") ? { version: "9.9.9", page: "https://github.com/viennv96/f-clean-feed/releases/tag/v9.9.9", zip: "https://github.com/viennv96/f-clean-feed/releases/download/v9.9.9/f-clean-feed-9.9.9.zip" } : null }
+          : undefined,
+      reload: () => (window.__reloaded = true),
+    },
     storage: { sync: area("sync"), local: area("local"), onChanged: { addListener: (l) => listeners.push(l) } },
   };
   window.__areas = areas;

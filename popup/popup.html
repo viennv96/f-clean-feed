@@ -21,6 +21,18 @@
     </label>
   </header>
 
+  <section class="card update" id="update" hidden>
+    <div class="update-head">
+      <b id="update-title"></b>
+      <a id="update-notes" target="_blank" rel="noopener" data-i18n="updateNotes"></a>
+    </div>
+    <ol class="update-steps">
+      <li><a id="update-download" class="update-btn" target="_blank" rel="noopener" data-i18n="updateDownload"></a></li>
+      <li data-i18n="updateUnzip"></li>
+      <li><button id="update-reload" class="update-btn ghost" data-i18n="updateReload"></button></li>
+    </ol>
+  </section>
+
   <section class="card stats">
     <div class="total">
       <b id="total">0</b>
@@ -54,7 +66,7 @@
   </a>
 
   <footer>
-    <span id="version"></span>
+    <button id="version" class="ver" type="button"></button>
     <span class="dot">·</span>
     <span data-i18n="footerPrivacy"></span>
     <button id="reset" class="link" data-i18n="statsReset"></button>

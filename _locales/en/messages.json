@@ -132,5 +132,37 @@
   },
   "kind_showPromo": {
     "message": "Developer's card"
+  },
+  "updateTitle": {
+    "message": "Version $VERSION$ is available",
+    "placeholders": {
+      "version": {
+        "content": "$1"
+      }
+    }
+  },
+  "updateNotes": {
+    "message": "What's new"
+  },
+  "updateDownload": {
+    "message": "Download the zip"
+  },
+  "updateUnzip": {
+    "message": "Unzip it over the extension's current folder"
+  },
+  "updateReload": {
+    "message": "Update now"
+  },
+  "updateCheck": {
+    "message": "Click to check for updates"
+  },
+  "updateChecking": {
+    "message": "Checking…"
+  },
+  "updateLatest": {
+    "message": "Up to date"
+  },
+  "updateFailed": {
+    "message": "Couldn't check"
   }
 }

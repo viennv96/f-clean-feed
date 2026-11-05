@@ -108,6 +108,7 @@ F Clean Feed hides unwanted units on facebook.com – sponsored posts, recommend
 
 | Quyền | Lý do (dán vào ô tương ứng) |
 |---|---|
+| `alarms` | Schedules a check for a newer release every 6 hours. Only copies installed from GitHub run it; Web Store copies (with update_url) skip it. |
 | `storage` | Stores the user's filter settings (chrome.storage.sync) and local counters of how many items were hidden (chrome.storage.local). No personal data is stored. |
 | Host permission `https://www.facebook.com/*`, `https://web.facebook.com/*` | Content scripts must run on facebook.com to detect and hide sponsored and recommended units. The extension does not run on any other site. |
 

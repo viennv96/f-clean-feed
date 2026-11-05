@@ -153,6 +153,24 @@ footer { display: flex; align-items: center; gap: 6px; margin: 12px 4px 0; font-
 .promo-go { color: var(--faint); font-size: 15px; transition: transform .15s, color .15s; }
 .promo:hover .promo-go { color: var(--accent-ink); transform: translateX(2px); }
 
+/* Update available (background.js checks GitHub releases). */
+.update { margin-bottom: 12px; padding: 10px 12px; border-color: color-mix(in srgb, var(--accent) 60%, var(--line)); background: color-mix(in srgb, var(--accent-soft) 70%, var(--card)); }
+.update-head { display: flex; align-items: baseline; gap: 8px; }
+.update-head b { font-size: 13px; font-weight: 650; color: var(--accent-ink); }
+.update-head a { margin-left: auto; font-size: 11.5px; color: var(--muted); }
+.update-head a:hover { color: var(--fg); }
+.update-steps { margin: 8px 0 0; padding-left: 18px; display: grid; gap: 6px; font-size: 12px; color: var(--muted); }
+.update-steps li::marker { color: var(--faint); font-weight: 600; }
+.update-btn {
+  display: inline-block; padding: 4px 10px; border-radius: 6px; border: 1px solid transparent;
+  background: var(--accent); color: #052e1f; font-size: 12px; font-weight: 650; text-decoration: none; cursor: pointer;
+}
+.update-btn:hover { filter: brightness(1.06); }
+.update-btn.ghost { background: var(--card); color: var(--fg); border-color: var(--line); }
+.update-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.ver { border: 0; background: none; padding: 0; font: inherit; color: inherit; cursor: pointer; }
+.ver:hover { color: var(--fg); text-decoration: underline; text-underline-offset: 2px; }
+
 .author { margin: 6px 4px 0; font-size: 11.5px; color: var(--faint); }
 .author a { color: var(--muted); text-decoration: none; font-weight: 550; }
 .author a:hover { color: var(--fg); text-decoration: underline; text-underline-offset: 2px; }

@@ -132,5 +132,37 @@
   },
   "kind_showPromo": {
     "message": "Thẻ giới thiệu của tác giả"
+  },
+  "updateTitle": {
+    "message": "Đã có bản $VERSION$",
+    "placeholders": {
+      "version": {
+        "content": "$1"
+      }
+    }
+  },
+  "updateNotes": {
+    "message": "Có gì mới"
+  },
+  "updateDownload": {
+    "message": "Tải file zip"
+  },
+  "updateUnzip": {
+    "message": "Giải nén, chép đè lên thư mục extension đang dùng"
+  },
+  "updateReload": {
+    "message": "Cập nhật ngay"
+  },
+  "updateCheck": {
+    "message": "Bấm để kiểm tra cập nhật"
+  },
+  "updateChecking": {
+    "message": "Đang kiểm tra…"
+  },
+  "updateLatest": {
+    "message": "Đã là bản mới nhất"
+  },
+  "updateFailed": {
+    "message": "Không kiểm tra được"
   }
 }
