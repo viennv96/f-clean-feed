@@ -65,6 +65,10 @@ sh store/build.sh
 
 ## Lịch sử phiên bản
 
+**1.1.1**
+- Tên extension không còn ký hiệu ™ ("… cho Facebook").
+- Thẻ quảng cáo MMO VPS hiển thị theo ngôn ngữ của Facebook (tiếng Việt hoặc tiếng Anh).
+
 **1.1.0**
 - Thẻ quảng cáo MMO VPS (viennv.dev) ở cột phải trang chủ, có logo, nút × ẩn 7 ngày và công tắc tắt trong popup.
 - Logo MMO VPS trong popup và website.
