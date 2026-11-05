@@ -15,6 +15,11 @@
   <a href="https://cleanfeed.viennv.dev/privacy-policy.html">Privacy</a>
 </p>
 
+<p align="center">
+  <a href="https://github.com/viennv96/f-clean-feed/releases/latest"><img src="https://img.shields.io/github/v/release/viennv96/f-clean-feed?label=version" alt="Version"></a>
+  <a href="https://github.com/viennv96/f-clean-feed/releases"><img src="https://img.shields.io/github/downloads/viennv96/f-clean-feed/total?label=downloads" alt="Downloads"></a>
+</p>
+
 ![F Clean Feed](docs/assets/en-screenshot-1.png)
 
 ## Tính năng

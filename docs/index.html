@@ -166,6 +166,10 @@
   .btn.ghost:hover { border-color: var(--faint); }
   .btn small { font-weight: 500; color: inherit; opacity: .7; }
   .note { margin-top: 14px; font-size: 14px; color: var(--faint); }
+  .dl { margin-top: 6px; font-size: 14px; color: var(--faint); display: flex; align-items: center; gap: 6px; }
+  .dl[hidden] { display: none; }
+  .dl b { color: var(--fg); font-variant-numeric: tabular-nums; }
+  .dl svg { width: 16px; height: 16px; flex: none; }
   .shot { width: 100%; height: auto; border-radius: 16px; border: 1px solid var(--line); box-shadow: 0 30px 80px rgba(11, 31, 58, .16); display: block; }
 
   section { padding: 56px 0; border-top: 1px solid var(--line); }
@@ -237,6 +241,7 @@
         <a class="btn ghost" href="#install"><span data-t="store">Chrome Web Store</span> <small data-t="soon">· sắp có</small></a>
       </div>
       <p class="note" data-t="note">Dành cho Google Chrome và các trình duyệt Chromium (Edge, Brave, Cốc Cốc).</p>
+      <p class="dl" id="dl" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg><span id="dl-text"></span></p>
     </div>
     <img class="shot" data-img="screenshot-1" src="assets/vi-screenshot-1.png" width="1280" height="800" alt="Popup F Clean Feed với các tuỳ chọn chặn quảng cáo, Reels và gợi ý" fetchpriority="high">
   </header>
@@ -245,7 +250,7 @@
 <section id="features">
   <div class="wrap">
     <h2 data-t="featTitle">Mọi thứ bạn cần để lướt yên tĩnh</h2>
-    <p class="sub" data-t="featSub">13 tuỳ chọn, mỗi tuỳ chọn một công tắc. Có hiệu lực ngay, không cần tải lại trang.</p>
+    <p class="sub" data-t="featSub">14 tuỳ chọn, mỗi tuỳ chọn một công tắc. Có hiệu lực ngay, không cần tải lại trang.</p>
     <div class="grid">
       <div class="card">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11v2a1 1 0 0 0 1 1h2l5 4V6L6 10H4a1 1 0 0 0-1 1z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/></svg>
@@ -334,13 +339,14 @@
 <script>
   const T = {
     vi: {
+      dlCount: (n, v) => `<b>${n}</b> lượt tải · phiên bản ${v}`,
       langBtn: "English", navFeatures: "Tính năng", navInstall: "Cài đặt",
       eyebrow: "Miễn phí · Không cần tài khoản",
       h1: "Bảng tin Facebook gọn gàng, không nhiễu.",
       lead: "F Clean Feed tự động ẩn bài được tài trợ, bài gợi ý, Reels và Tin. Chỉ còn bạn bè và những trang bạn thực sự theo dõi.",
       download: "Tải bản mới nhất", store: "Chrome Web Store", soon: "· sắp có",
       note: "Dành cho Google Chrome và các trình duyệt Chromium (Edge, Brave, Cốc Cốc).",
-      featTitle: "Mọi thứ bạn cần để lướt yên tĩnh", featSub: "13 tuỳ chọn, mỗi tuỳ chọn một công tắc. Có hiệu lực ngay, không cần tải lại trang.",
+      featTitle: "Mọi thứ bạn cần để lướt yên tĩnh", featSub: "14 tuỳ chọn, mỗi tuỳ chọn một công tắc. Có hiệu lực ngay, không cần tải lại trang.",
       f1t: "Chặn quảng cáo", f1: "Bài được tài trợ trong bảng tin, quảng cáo cột phải, Marketplace và kết quả tìm kiếm.",
       f2t: "Ẩn Reels và Tin", f2: "Bỏ khay Reels và thanh Tin. Muốn thì vẫn giữ Reels do bạn bè chia sẻ.",
       f3t: "Bớt gợi ý", f3: "\"Gợi ý cho bạn\", \"Những người bạn có thể biết\" và nhóm gợi ý.",
@@ -364,13 +370,14 @@
       tm: "Facebook là thương hiệu của Meta Platforms, Inc. F Clean Feed là dự án độc lập, không liên kết hay được Meta bảo trợ.",
     },
     en: {
+      dlCount: (n, v) => `<b>${n}</b> downloads · version ${v}`,
       langBtn: "Tiếng Việt", navFeatures: "Features", navInstall: "Install",
       eyebrow: "Free · No account",
       h1: "Your Facebook feed, without the noise.",
       lead: "F Clean Feed automatically hides sponsored posts, suggestions, Reels and Stories. Just the people and pages you actually follow.",
       download: "Download latest", store: "Chrome Web Store", soon: "· coming soon",
       note: "For Google Chrome and Chromium browsers (Edge, Brave and others).",
-      featTitle: "Everything you need for a quiet feed", featSub: "13 controls, one switch each. Changes apply instantly, no reload.",
+      featTitle: "Everything you need for a quiet feed", featSub: "14 controls, one switch each. Changes apply instantly, no reload.",
       f1t: "Ad blocking", f1: "Sponsored posts in the feed, right-column ads, Marketplace and search result ads.",
       f2t: "Hide Reels & Stories", f2: "Drop the Reels trays and Stories bar. Optionally keep reels shared by friends.",
       f3t: "Fewer suggestions", f3: "\"Suggested for you\", People You May Know and suggested groups.",
@@ -407,6 +414,35 @@
     }
     for (const img of document.querySelectorAll("[data-img]")) img.src = `assets/${lang}-${img.dataset.img}.png`;
     document.getElementById("lang").textContent = T[lang].langBtn;
+    renderDownloads();
+  }
+
+  // Download count: sum of every release asset's download_count from the
+  // GitHub API (no auth, 60 requests/hour per IP), cached for an hour.
+  let downloads = null;
+  function renderDownloads() {
+    if (!downloads) return;
+    const n = downloads.total.toLocaleString(lang === "vi" ? "vi-VN" : "en-US");
+    const v = String(downloads.version).replace(/[^0-9a-z.\-]/gi, "");
+    document.getElementById("dl-text").innerHTML = T[lang].dlCount(n, v);
+    document.getElementById("dl").hidden = false;
+  }
+  async function loadDownloads() {
+    const KEY = "fcf-dl";
+    try {
+      const c = JSON.parse(localStorage.getItem(KEY));
+      if (c && Date.now() - c.at < 3600e3) { downloads = c; return renderDownloads(); }
+    } catch (e) {}
+    try {
+      const r = await fetch("https://api.github.com/repos/viennv96/f-clean-feed/releases?per_page=100");
+      if (!r.ok) return;
+      const releases = await r.json();
+      const total = releases.reduce((a, rel) => a + rel.assets.reduce((b, x) => b + (x.download_count || 0), 0), 0);
+      const latest = releases.find((rel) => !rel.prerelease && !rel.draft);
+      downloads = { total, version: latest ? latest.tag_name.replace(/^v/, "") : "", at: Date.now() };
+      try { localStorage.setItem(KEY, JSON.stringify(downloads)); } catch (e) {}
+      renderDownloads();
+    } catch (e) {}
   }
   document.getElementById("lang").addEventListener("click", () => {
     lang = lang === "vi" ? "en" : "vi";
@@ -414,6 +450,7 @@
     apply();
   });
   apply();
+  loadDownloads();
 </script>
 </body>
 </html>
