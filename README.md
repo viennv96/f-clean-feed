@@ -76,6 +76,9 @@ sh store/build.sh
 
 ## Lịch sử phiên bản
 
+**1.4.1**
+- Sửa "Xem bình luận ngay dưới bài": hộp thoại bài viết đôi khi vẫn hiện lên sau khi tải xong (thường ở bài chưa có bình luận trong nhóm), và có lúc trang bị lùi về trang trước. Giờ hộp thoại luôn được đóng bằng chính Facebook, thử lại đến khi đóng hẳn.
+
 **1.4.0**
 - Nhắc cập nhật cho bản cài từ GitHub: kiểm tra bản mới mỗi 6 giờ, biểu tượng hiện nhãn NEW, popup hướng dẫn 3 bước (tải zip, chép đè, *Cập nhật ngay* để extension tự tải lại). Bấm số phiên bản ở cuối popup để kiểm tra ngay.
 - Thêm quyền `alarms` (hẹn giờ kiểm tra). Yêu cầu mạng duy nhất là hỏi GitHub API số phiên bản mới nhất, không gửi dữ liệu nào của bạn.

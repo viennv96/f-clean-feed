@@ -299,31 +299,44 @@
       return;
     }
     // The data can be ready (preloaded) before Facebook has even opened the
-    // dialog: wait for it to open, close it, and keep it invisible until
-    // Facebook has taken it down.
+    // dialog, and a close request sent while it is still opening is ignored,
+    // so keep asking until it is gone. Closing goes through Facebook itself
+    // (Escape, then its close button): it puts the URL back on its own, and
+    // stepping back in history ourselves as well would leave the page.
     const started = Date.now();
-    let closed = false;
+    let lastClose = 0;
+    let attempts = 0;
+    let seenDialog = false;
+    let routed = false;
     const step = () => {
+      const now = Date.now();
       const dialog = document.querySelector('[role="dialog"][aria-modal="true"]');
-      if (!closed && location.href !== p.url) {
+      if (dialog) seenDialog = true;
+      if (location.href !== p.url && !routed) {
+        routed = true;
         if (p.data) remember(location.pathname, p.data);
-        history.back();
-        closed = true;
-      } else if (!closed && dialog) {
-        closeDialog();
-        closed = true;
       }
-      const gone = !document.querySelector('[role="dialog"][aria-modal="true"]') && location.href === p.url;
-      if ((closed && gone) || Date.now() - started > 3000) showLayers();
+      // Once a routed dialog has given the URL back it is closing: let it go.
+      const closing = routed && location.href === p.url;
+      if (dialog && !closing && now - lastClose > 500) {
+        lastClose = now;
+        closeDialog(dialog, ++attempts);
+      }
+      const gone = !dialog && location.href === p.url;
+      // Done once the dialog has come and gone (or never came at all).
+      if ((gone && (seenDialog || now - started > 1500)) || now - started > 6000) showLayers();
       else requestAnimationFrame(step);
     };
     requestAnimationFrame(step);
   }
 
-  function closeDialog() {
-    const dialog = [...document.querySelectorAll('[role="dialog"][aria-modal="true"]')].pop();
-    if (!dialog) return;
+  // Escape first; if Facebook ignores it, its own close button.
+  function closeDialog(dialog, attempt) {
     dialog.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", code: "Escape", keyCode: 27, bubbles: true }));
+    if (attempt > 2) {
+      const close = dialog.querySelector('[role="button"][aria-label="Đóng"], [role="button"][aria-label="Close"]');
+      if (close) close.click();
+    }
   }
 
   // ---- Panel --------------------------------------------------------------
