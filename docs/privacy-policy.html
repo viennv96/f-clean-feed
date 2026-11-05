@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>F Clean Feed – Privacy Policy</title>
+<style>
+  :root { --fg: #0f1b2d; --muted: #5b6b80; --line: #e6eaf0; --bg: #ffffff; --accent: #047857; }
+  @media (prefers-color-scheme: dark) { :root { --fg: #e8edf4; --muted: #9aa8bb; --line: #1f2a3d; --bg: #0b1220; --accent: #34d399; } }
+  body { margin: 0; background: var(--bg); color: var(--fg); font: 16px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+  main { max-width: 720px; margin: 0 auto; padding: 48px 16px 64px; }
+  h1 { font-size: 30px; letter-spacing: -.02em; margin: 0 0 4px; }
+  h2 { font-size: 19px; margin: 32px 0 8px; }
+  .muted { color: var(--muted); }
+  hr { border: 0; border-top: 1px solid var(--line); margin: 40px 0; }
+  table { border-collapse: collapse; width: 100%; font-size: 15px; }
+  td, th { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  code { font-size: 14px; }
+</style>
+</head>
+<body>
+<main>
+  <p><a href="./">← F Clean Feed</a></p>
+  <h1>F Clean Feed – Privacy Policy</h1>
+  <p class="muted">Last updated: November 5, 2026 · Developer: Nguyễn Văn Viên (<a href="https://viennv.dev">viennv.dev</a>)</p>
+
+  <p>F Clean Feed is a browser extension that hides sponsored posts, recommendations and other unwanted units on facebook.com. This policy explains what the extension does and does not do with your information.</p>
+
+  <h2>Summary</h2>
+  <p><strong>F Clean Feed does not collect, transmit, sell or share any personal data.</strong> It has no servers, no analytics and no third-party code. All processing happens locally in your browser.</p>
+
+  <h2>What the extension reads</h2>
+  <p>On facebook.com pages only, the extension inspects the page structure to decide whether a unit is sponsored, suggested, a Reels tray and so on, and then hides it. This happens entirely in your browser. Page content is never stored, logged or sent anywhere.</p>
+
+  <h2>What the extension stores</h2>
+  <table>
+    <tr><th>Data</th><th>Where</th><th>Purpose</th></tr>
+    <tr><td>Your filter settings (which items to hide, display mode)</td><td><code>chrome.storage.sync</code></td><td>Remember your choices, and keep them in sync across your own Chrome browsers if Chrome Sync is on.</td></tr>
+    <tr><td>Counters of hidden items (numbers only, per category)</td><td><code>chrome.storage.local</code></td><td>Show the statistics in the popup. You can reset them at any time.</td></tr>
+  </table>
+  <p>No browsing history, post content, account names, identifiers or URLs are stored.</p>
+
+  <h2>Permissions</h2>
+  <ul>
+    <li><strong>storage</strong> – saves the settings and counters described above.</li>
+    <li><strong>Access to facebook.com</strong> – required to hide units on that site. The extension does not run on any other website.</li>
+  </ul>
+
+  <h2>Third parties</h2>
+  <p>The extension makes no network requests of its own and includes no third-party services. The popup contains a link to the developer's website (viennv.dev); it is an ordinary link that opens only when you click it, and no data is attached to it. F Clean Feed is not affiliated with or endorsed by Meta Platforms, Inc. Facebook is a trademark of Meta Platforms, Inc.</p>
+
+  <h2>Changes</h2>
+  <p>If this policy changes, the updated version will be published at this address with a new date.</p>
+
+  <h2>Contact</h2>
+  <p>Questions about this policy: open an issue at <a href="https://github.com/viennv96/f-clean-feed/issues">github.com/viennv96/f-clean-feed/issues</a>.</p>
+
+  <hr>
+
+  <h1 lang="vi">Chính sách quyền riêng tư</h1>
+  <div lang="vi">
+    <p><strong>F Clean Feed không thu thập, truyền đi, bán hay chia sẻ bất kỳ dữ liệu cá nhân nào.</strong> Extension không có máy chủ, không dùng analytics, không chứa mã của bên thứ ba. Mọi xử lý diễn ra ngay trong trình duyệt của bạn.</p>
+    <p>Trên facebook.com, extension chỉ đọc cấu trúc trang để nhận biết và ẩn bài được tài trợ, bài gợi ý, Reels… Nội dung trang không bao giờ được lưu hay gửi đi đâu.</p>
+    <p>Extension chỉ lưu: các tuỳ chọn lọc của bạn (trong <code>chrome.storage.sync</code>) và các con số thống kê số mục đã ẩn (trong <code>chrome.storage.local</code>, có thể đặt lại bất kỳ lúc nào).</p>
+    <p>Popup có một liên kết tới website của nhà phát triển (viennv.dev). Đó là liên kết thông thường, chỉ mở khi bạn bấm và không gửi kèm dữ liệu nào.</p>
+    <p>Nhà phát triển: Nguyễn Văn Viên – <a href="https://viennv.dev">viennv.dev</a>.</p>
+    <p>F Clean Feed không liên kết hay được Meta Platforms, Inc. bảo trợ. Facebook là thương hiệu của Meta Platforms, Inc.</p>
+    <p>Liên hệ: tạo issue tại <a href="https://github.com/viennv96/f-clean-feed/issues">github.com/viennv96/f-clean-feed/issues</a>.</p>
+  </div>
+</main>
+</body>
+</html>

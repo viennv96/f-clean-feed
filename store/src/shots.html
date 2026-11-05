@@ -1,0 +1,155 @@
+<!doctype html>
+<!--
+  Chrome Web Store graphics. Served over HTTP from clean-feed/ (the popup is
+  embedded live from test/popup.html), rendered by store/build.sh.
+  ?s=1..4 screenshots (1280×800), ?s=tile (440×280), ?s=marquee (1400×560); &lang=en|vi
+-->
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  :root {
+    --navy: #0b1f3a; --navy2: #12355e; --emerald: #10b981; --mint: #34d399;
+    --ink: #0f1b2d; --muted: #5b6b80; --line: #e6eaf0; --bg: #f4f6f9;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body { font: 16px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; color: var(--ink); -webkit-font-smoothing: antialiased; }
+  .frame { position: relative; overflow: hidden; width: 1280px; height: 800px; display: flex; align-items: center; gap: 64px; padding: 0 88px; }
+  .light { background: radial-gradient(1200px 600px at 85% 20%, #e7f8f1 0%, transparent 60%), var(--bg); }
+  .dark { background: radial-gradient(900px 600px at 80% 30%, #163f6e 0%, transparent 65%), linear-gradient(135deg, var(--navy2), var(--navy)); color: #fff; }
+  .copy { flex: 1; }
+  .eyebrow { display: inline-flex; align-items: center; gap: 10px; font-weight: 650; font-size: 18px; color: var(--emerald); margin-bottom: 18px; }
+  .eyebrow img { width: 36px; height: 36px; border-radius: 9px; }
+  .dark .eyebrow { color: var(--mint); }
+  h1 { font-size: 54px; line-height: 1.08; letter-spacing: -.025em; margin: 0 0 20px; font-weight: 750; }
+  p.lead { font-size: 21px; color: var(--muted); margin: 0 0 28px; max-width: 520px; }
+  .dark p.lead { color: #b8c6d9; }
+  ul.points { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+  ul.points li { display: flex; gap: 12px; align-items: center; font-size: 18px; font-weight: 520; }
+  ul.points li::before {
+    content: ""; width: 22px; height: 22px; flex: none; border-radius: 50%;
+    background: var(--emerald) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 12.5l4 4 8-9'/%3E%3C/svg%3E") center/14px no-repeat;
+  }
+  .popup {
+    width: 340px; height: 640px; border: 0; flex: none; border-radius: 14px;
+    box-shadow: 0 30px 80px rgba(11, 31, 58, .22), 0 0 0 1px rgba(11, 31, 58, .06);
+    background: #f4f6f9;
+  }
+  .dark .popup { box-shadow: 0 30px 80px rgba(0, 0, 0, .45), 0 0 0 1px rgba(255, 255, 255, .06); background: #0b1220; }
+
+  /* Before / after mock feed (generic illustration, not a real site's UI). */
+  .compare { display: flex; gap: 28px; flex: none; }
+  .col { width: 330px; }
+  .col h3 { margin: 0 0 12px; font-size: 15px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+  .col.after h3 { color: var(--emerald); }
+  .post { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 14px; margin-bottom: 12px; box-shadow: 0 1px 2px rgba(15,27,45,.05); }
+  .who { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+  .av { width: 34px; height: 34px; border-radius: 50%; background: #d7dfea; }
+  .nm { height: 10px; width: 110px; border-radius: 5px; background: #c7d2e0; }
+  .tag { margin-left: auto; font-size: 12px; font-weight: 650; padding: 2px 8px; border-radius: 999px; }
+  .tag.ad { color: #b45309; background: #fef3c7; }
+  .tag.sg { color: #6d28d9; background: #ede9fe; }
+  .tag.rl { color: #be185d; background: #fce7f3; }
+  .ln { height: 8px; border-radius: 4px; background: #e3e9f1; margin: 7px 0; }
+  .img { height: 92px; border-radius: 8px; margin-top: 10px; background: linear-gradient(135deg, #dbe4ef, #eef2f7); }
+  .reels { display: flex; gap: 6px; margin-top: 10px; }
+  .reels i { flex: 1; height: 88px; border-radius: 8px; background: linear-gradient(180deg, #e9d5ff, #fbcfe8); }
+  .ghost { border: 1px dashed #b7c3d2; border-radius: 10px; padding: 10px 14px; margin-bottom: 12px; color: var(--muted); font-size: 13.5px; background: #fff; }
+
+  /* Privacy cards */
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; flex: none; width: 560px; }
+  .pc { border-radius: 16px; padding: 22px; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1); }
+  .pc svg { width: 30px; height: 30px; color: var(--mint); }
+  .pc b { display: block; font-size: 19px; margin: 12px 0 4px; }
+  .pc span { color: #b8c6d9; font-size: 15px; }
+  .fine { position: absolute; bottom: 26px; left: 88px; font-size: 13px; color: #8ea2bb; }
+
+  /* Promo tiles */
+  .tile { width: 440px; height: 280px; padding: 34px; display: flex; flex-direction: column; justify-content: center; gap: 14px; }
+  .tile img { width: 72px; height: 72px; }
+  .tile b { font-size: 34px; letter-spacing: -.02em; line-height: 1.05; }
+  .tile span { font-size: 17px; color: #b8c6d9; }
+  .marquee { width: 1400px; height: 560px; padding: 0 110px; }
+  .marquee h1 { font-size: 60px; }
+  .marquee .popup { height: 470px; }
+</style>
+</head>
+<body>
+<script>
+const q = new URLSearchParams(location.search);
+const lang = q.get("lang") || "en";
+const s = q.get("s") || "1";
+const T = {
+  en: {
+    brand: "F Clean Feed",
+    h1: "Your Facebook™ feed,<br>without the noise.",
+    lead: "Hide sponsored posts, suggestions and Reels automatically. Just the people and pages you follow.",
+    p1: ["Sponsored posts & side-column ads", "Suggested posts, groups & people", "Reels and Stories, your choice"],
+    h2: "See only what<br>you came for.",
+    lead2: "F Clean Feed recognises promoted and recommended units as they load, and removes them before you scroll past.",
+    before: "Before", after: "With F Clean Feed",
+    ad: "Sponsored", sg: "Suggested", rl: "Reels",
+    ghost1: "Sponsored post hidden · click to show", ghost2: "Suggested post hidden · click to show",
+    h3: "13 controls.<br>One tap each.",
+    lead3: "Turn each filter on or off and the page updates instantly. No reload, no account, no setup.",
+    p3: ["Remove or collapse hidden items", "Keep your friends' reels if you like", "Track how much clutter was removed"],
+    h4: "Private by design.",
+    lead4: "Everything runs inside your browser. F Clean Feed has no servers and never sees what you read.",
+    c: [["No account", "Works the moment you install it."], ["No tracking", "No analytics, no third-party code."], ["No servers", "Your settings stay in Chrome sync."], ["Minimal access", "Only facebook.com, only to tidy the page."]],
+    fine: "Facebook is a trademark of Meta Platforms, Inc. F Clean Feed is not affiliated with or endorsed by Meta.",
+    tile: "Ad & Reels blocker for Facebook™",
+  },
+  vi: {
+    brand: "F Clean Feed",
+    h1: "Bảng tin Facebook™<br>gọn gàng, không nhiễu.",
+    lead: "Tự động ẩn bài được tài trợ, bài gợi ý và Reels. Chỉ còn bạn bè và trang bạn theo dõi.",
+    p1: ["Bài tài trợ & quảng cáo cột phải", "Bài, nhóm & người được gợi ý", "Reels và Tin, tuỳ bạn chọn"],
+    h2: "Chỉ xem đúng<br>thứ bạn muốn.",
+    lead2: "F Clean Feed nhận ra nội dung quảng cáo và gợi ý ngay khi tải, và ẩn chúng trước khi bạn lướt tới.",
+    before: "Trước", after: "Với F Clean Feed",
+    ad: "Được tài trợ", sg: "Gợi ý", rl: "Reels",
+    ghost1: "Đã ẩn bài được tài trợ · bấm để xem", ghost2: "Đã ẩn bài gợi ý · bấm để xem",
+    h3: "13 tuỳ chọn.<br>Một chạm là xong.",
+    lead3: "Bật hoặc tắt từng bộ lọc, trang cập nhật ngay. Không cần tải lại, không cần tài khoản.",
+    p3: ["Xoá hẳn hoặc thu gọn mục bị ẩn", "Giữ lại Reels của bạn bè nếu muốn", "Thống kê lượng nội dung đã lọc"],
+    h4: "Riêng tư ngay từ thiết kế.",
+    lead4: "Mọi thứ chạy trong trình duyệt của bạn. F Clean Feed không có máy chủ và không biết bạn đọc gì.",
+    c: [["Không tài khoản", "Dùng ngay sau khi cài."], ["Không theo dõi", "Không analytics, không mã bên thứ ba."], ["Không máy chủ", "Cài đặt lưu trong Chrome sync."], ["Quyền tối thiểu", "Chỉ facebook.com, chỉ để dọn trang."]],
+    fine: "Facebook là thương hiệu của Meta Platforms, Inc. F Clean Feed không liên kết hay được Meta bảo trợ.",
+    tile: "Chặn quảng cáo & Reels cho Facebook™",
+  },
+}[lang];
+
+const icon = "../assets/icon-512.png";
+const popup = (dark) => `<iframe class="popup" src="../../test/popup.html?lang=${lang}"></iframe>`;
+const eyebrow = `<div class="eyebrow"><img src="${icon}" alt="">${T.brand}</div>`;
+const points = (arr) => `<ul class="points">${arr.map((x) => `<li>${x}</li>`).join("")}</ul>`;
+const post = (tag, cls, body = '<div class="img"></div>') =>
+  `<div class="post"><div class="who"><i class="av"></i><i class="nm"></i>${tag ? `<span class="tag ${cls}">${tag}</span>` : ""}</div><div class="ln"></div><div class="ln" style="width:70%"></div>${body}</div>`;
+const S = (d) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${d}</svg>`;
+const PICONS = [
+  S('<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/><path d="M3 3l18 18"/>'),
+  S('<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/><path d="M3 3l18 18"/>'),
+  S('<rect x="3" y="4" width="18" height="7" rx="2"/><rect x="3" y="13" width="18" height="7" rx="2"/><path d="M3 3l18 18"/>'),
+  S('<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/>'),
+];
+
+const pages = {
+  1: `<div class="frame light"><div class="copy">${eyebrow}<h1>${T.h1}</h1><p class="lead">${T.lead}</p>${points(T.p1)}</div>${popup()}</div>`,
+  2: `<div class="frame light"><div class="copy">${eyebrow}<h1>${T.h2}</h1><p class="lead">${T.lead2}</p></div>
+      <div class="compare">
+        <div class="col"><h3>${T.before}</h3>${post(T.ad, "ad")}${post(T.sg, "sg", "")}${post(T.rl, "rl", '<div class="reels"><i></i><i></i><i></i></div>')}</div>
+        <div class="col after"><h3>${T.after}</h3><div class="ghost">${T.ghost1}</div>${post("", "")}<div class="ghost">${T.ghost2}</div>${post("", "")}</div>
+      </div></div>`,
+  3: `<div class="frame dark"><div class="copy">${eyebrow}<h1>${T.h3}</h1><p class="lead">${T.lead3}</p>${points(T.p3)}</div>${popup(true)}</div>`,
+  4: `<div class="frame dark"><div class="copy">${eyebrow}<h1>${T.h4}</h1><p class="lead">${T.lead4}</p></div>
+      <div class="grid">${T.c.map(([b, sp], i) => `<div class="pc">${PICONS[i]}<b>${b}</b><span>${sp}</span></div>`).join("")}</div>
+      <div class="fine">${T.fine}</div></div>`,
+  tile: `<div class="tile dark"><img src="${icon}" alt=""><b>${T.brand}</b><span>${T.tile}</span></div>`,
+  marquee: `<div class="frame dark marquee"><div class="copy">${eyebrow}<h1>${T.h1}</h1><p class="lead">${T.lead}</p></div>${popup(true)}</div>`,
+};
+document.body.innerHTML = pages[s];
+</script>
+</body>
+</html>

@@ -1,0 +1,78 @@
+<!doctype html>
+<!-- Mock Facebook page with fake React fibers. Serve clean-feed/ over HTTP and open /test/fixture.html. -->
+<html data-fbc-mode="hide" data-fbc-hide="sponsored suggested reels reelpost pymk groups stories market search rail birthdays badges clean">
+<head><meta charset="utf-8"><link rel="stylesheet" href="../content/hide.css"></head>
+<body>
+<div role="banner" id="banner">
+  <div role="navigation"><a href="/notifications" aria-label="Notifications"><div style="width:20px"><span>5</span></div></a></div>
+</div>
+<div role="navigation" id="leftnav"><a href="/friends">Friends</a><a href="/groups">Groups</a></div>
+<div role="main" id="main">
+  <div id="stories-wrap"><div id="stories"><a href="/stories/create">Create</a><a href="/stories/1">s1</a><a href="/stories/2">s2</a><a href="/stories/3">s3</a></div></div>
+  <div role="tablist" id="tabs"><div role="tab"><span dir="auto">Tin</span></div><div role="tab"><span dir="auto">Reels</span></div></div>
+  <div role="feed" id="feed"></div>
+  <!-- Reels tray outside the feed selectors, items without /reel/ hrefs (as in the live screenshot). -->
+  <div id="tray-wrap"><div><div id="orphan-tray" style="height:300px"><div><span dir="auto"><span>Reels</span></span></div><div><div role="link">a</div><div role="link">b</div><div role="link">c</div></div></div></div><div>sibling</div></div>
+  <!-- Current layout (Nov 2026): no role=feed; stories are virtualised-list items, and the
+       meta-line label is drawn through a chain of SVG <use> references ending in <text>. -->
+  <svg width="0" height="0" style="position:absolute">
+    <text id="SvgWml10">Được tài trợ</text><svg id="SvgWml11"><use href="#SvgWml10"/></svg><svg id="SvgWml12"><use href="#SvgWml11"/></svg>
+    <text id="SvgWml20">32 phút</text><svg id="SvgWml21"><use href="#SvgWml20"/></svg><svg id="SvgWml22"><use href="#SvgWml21"/></svg>
+  </svg>
+  <div id="vlist">
+    <div data-virtualized="false" id="v-ad"><span>Facebook</span><span>Facebook</span><div data-ad-rendering-role="profile_name"><h4><a href="/chuyennha">Chuyển Nhà</a></h4></div><a href=""><svg><use href="#SvgWml12"/></svg></a><div data-ad-rendering-role="story_message">Dịch vụ trọn gói</div><div data-ad-rendering-role="cta-button">Gửi tin nhắn</div><i></i><i></i></div>
+    <div data-virtualized="false" id="v-organic"><span>Facebook</span><div data-ad-rendering-role="profile_name"><h4><a href="/hoi">Hội MacBook</a></h4></div><a href="/groups/1/posts/2"><svg><use href="#SvgWml22"/></svg></a><div data-ad-rendering-role="story_message">Bán máy</div><i></i><i></i><i></i></div>
+    <div data-virtualized="false" id="v-suggested"><span>Facebook</span><span>Facebook</span><span>Gợi ý cho bạn</span><div data-ad-rendering-role="profile_name"><h4><a href="/p">Trang X</a></h4></div><i></i><i></i><i></i><i></i></div>
+    <div data-virtualized="true" id="v-empty"></div>
+  </div>
+  <div id="grid"></div>
+</div>
+<div role="complementary" id="rail"></div>
+<!-- Right column without role=complementary; heading text in decomposed (NFD) form with a NBSP, ads linking out. -->
+<div id="rail2"><div><div><h3><span>Được tài trợ</span></h3></div><div id="rail2-ads"><a href="https://elevenlabs.io"><img alt="">ElevenAgents</a><a href="https://adobe.com"><img alt="">Photoshop</a></div></div><div id="rail2-contacts"><h3>Người liên hệ</h3><a href="/m">m</a></div></div>
+<script>
+const feed = document.getElementById('feed');
+function withFiber(el, props) {
+  // Fake fiber: element -> child component carrying the props.
+  const child = { memoizedProps: props, child: null, sibling: null };
+  el['__reactFiber$test'] = { memoizedProps: { className: 'u' }, child, sibling: null, return: null };
+}
+function unit(id, html, props) {
+  const d = document.createElement('div'); d.id = id;
+  d.innerHTML = html + '<div>' + '<span>x</span>'.repeat(10) + '</div>';
+  if (props) withFiber(d, props);
+  feed.appendChild(d);
+}
+unit('organic', '<h4>Alice</h4><p>Hello world</p>', { feedEdge: { category: 'ORGANIC' } });
+unit('spon-fiber', '<h4>Brand X</h4><span>S p o n</span>', { feedEdge: { category: 'SPONSORED' } });
+unit('spon-data', '<h4>Brand Y</h4>', { story: { node: { sponsored_data: { id: 1 } } } });
+unit('spon-label', '<span id="lbl">Được tài trợ</span><a aria-labelledby="lbl" href="#">.</a>');
+unit('suggested', '<h4>Suggested for you</h4><p>Some page</p>');
+unit('pymk', '<h4>Những người bạn có thể biết</h4>');
+unit('groups', '<a href="/groups/discover/">See all</a>');
+unit('reels', '<h4>Reels and short videos</h4><a href="/reel/1">a</a>');
+unit('reels-fiber', '<h4>Bob</h4>', { feedEdge: { category: 'FB_SHORTS' } });
+unit('friend-reel', '<h4>Carol shared</h4><a href="/reel/9">a</a><p>nice</p>');
+document.getElementById('rail').innerHTML =
+  '<div id="rail-ad"><div><h3>Sponsored</h3><a href="https://ads.example">ad</a></div></div>' +
+  '<div id="rail-bday"><h3>Sinh nhật</h3><a href="/events/birthdays">Hôm nay là sinh nhật của Dũng</a></div>' +
+  '<div id="rail-contacts"><h3>Contacts</h3><a href="/c">c</a></div>';
+// Marketplace-style grid: one sponsored card by props, one by label, two organic.
+const grid = document.getElementById('grid');
+grid.innerHTML =
+  '<div id="m-organic"><a href="/marketplace/item/1"><img alt="">Bike</a></div>' +
+  '<div id="m-fiber"><a href="/marketplace/item/2"><img alt="">Shoes</a></div>' +
+  '<div id="m-label"><a href="https://shop.example"><img alt=""><span>Sponsored</span></a></div>' +
+  '<div id="m-organic2"><a href="/marketplace/item/3"><img alt="">Desk</a></div>';
+withFiber(grid.querySelector('#m-fiber a'), { listing: { is_sponsored: true } });
+
+window.msgs = []; addEventListener('message', e => e.data && e.data.__fbc && msgs.push(e.data.kind));
+// Reels tray whose heading is a link to /reels/.
+unit('linked-reels', '<a href="/reels/"><span dir="auto">Reels</span></a><div role="link">r</div>');
+// Skeleton unit whose Reels heading arrives later.
+unit('late-reels', '<div></div>');
+setTimeout(() => { document.getElementById('late-reels').insertAdjacentHTML('afterbegin', '<h3>Reels</h3><div role="link">r</div>'); }, 3000);
+setTimeout(() => unit('late-spon', '<h4>Late</h4>', { feedEdge: { category: 'SPONSORED' } }), 800);
+</script>
+<script src="../content/main.js"></script>
+</body></html>

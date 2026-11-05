@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>F Clean Feed – Ad &amp; Reels blocker for Facebook™</title>
+<meta name="description" content="Hide sponsored posts, suggestions, Reels and Stories on Facebook™. Free, private, no account.">
+<meta property="og:title" content="F Clean Feed">
+<meta property="og:description" content="Ad & Reels blocker for Facebook™. Free, private, no account.">
+<meta property="og:image" content="https://viennv96.github.io/f-clean-feed/assets/en-screenshot-1.png">
+<link rel="icon" href="assets/favicon-32.png">
+<style>
+  :root {
+    --bg: #f4f6f9; --card: #ffffff; --fg: #0f1b2d; --muted: #5b6b80; --faint: #8a98ab; --line: #e6eaf0;
+    --navy: #0b1f3a; --navy2: #12355e; --accent: #10b981; --accent-ink: #047857; --accent-soft: #e7f8f1;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #0b1220; --card: #121b2c; --fg: #e8edf4; --muted: #9aa8bb; --faint: #6e7d92; --line: #1f2a3d; --accent: #34d399; --accent-ink: #34d399; --accent-soft: rgba(52,211,153,.12); }
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body { margin: 0; background: var(--bg); color: var(--fg); font: 16px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif; -webkit-font-smoothing: antialiased; }
+  a { color: inherit; }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 16px; }
+
+  nav { display: flex; align-items: center; gap: 12px; padding: 18px 0; }
+  nav .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; text-decoration: none; letter-spacing: -.01em; }
+  nav .brand img { width: 32px; height: 32px; border-radius: 8px; }
+  nav .spacer { flex: 1; }
+  nav a.plain { color: var(--muted); text-decoration: none; font-size: 15px; }
+  nav a.plain:hover { color: var(--fg); }
+  .lang { border: 1px solid var(--line); background: var(--card); color: var(--muted); border-radius: 8px; padding: 4px 10px; font: inherit; font-size: 14px; cursor: pointer; }
+
+  .hero { display: grid; grid-template-columns: 1.05fr .95fr; gap: 48px; align-items: center; padding: 48px 0 64px; }
+  .eyebrow { display: inline-flex; align-items: center; gap: 8px; padding: 4px 12px; border-radius: 999px; background: var(--accent-soft); color: var(--accent-ink); font-size: 14px; font-weight: 600; }
+  .eyebrow i { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); }
+  h1 { font-size: clamp(36px, 5.2vw, 58px); line-height: 1.06; letter-spacing: -.03em; margin: 18px 0 18px; }
+  .lead { font-size: clamp(17px, 1.6vw, 20px); color: var(--muted); margin: 0 0 30px; max-width: 34em; }
+  .cta { display: flex; flex-wrap: wrap; gap: 12px; }
+  .btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 20px; border-radius: 10px; font-weight: 600; text-decoration: none; font-size: 16px; border: 1px solid transparent; }
+  .btn.primary { background: var(--navy2); color: #fff; }
+  .btn.primary:hover { background: var(--navy); }
+  @media (prefers-color-scheme: dark) { .btn.primary { background: var(--accent); color: #062b1f; } .btn.primary:hover { filter: brightness(1.08); } }
+  .btn.ghost { border-color: var(--line); background: var(--card); color: var(--fg); }
+  .btn.ghost:hover { border-color: var(--faint); }
+  .btn small { font-weight: 500; color: inherit; opacity: .7; }
+  .note { margin-top: 14px; font-size: 14px; color: var(--faint); }
+  .shot { width: 100%; height: auto; border-radius: 16px; border: 1px solid var(--line); box-shadow: 0 30px 80px rgba(11, 31, 58, .16); display: block; }
+
+  section { padding: 56px 0; border-top: 1px solid var(--line); }
+  h2 { font-size: clamp(26px, 3vw, 34px); letter-spacing: -.02em; margin: 0 0 8px; }
+  .sub { color: var(--muted); margin: 0 0 32px; }
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 22px; }
+  .card svg { width: 26px; height: 26px; color: var(--accent-ink); }
+  .card h3 { font-size: 17px; margin: 12px 0 6px; }
+  .card p { margin: 0; color: var(--muted); font-size: 15px; }
+
+  .shots { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .shots img { width: 100%; height: auto; border-radius: 12px; border: 1px solid var(--line); display: block; }
+
+  ol.steps { margin: 0; padding-left: 22px; color: var(--muted); }
+  ol.steps li { margin: 6px 0; }
+  ol.steps b, ol.steps code { color: var(--fg); }
+  code { font: 14px ui-monospace, SFMono-Regular, Menlo, monospace; background: var(--line); padding: 1px 6px; border-radius: 5px; }
+
+  .promo { display: flex; align-items: center; gap: 18px; text-decoration: none; padding: 22px 24px; }
+  .promo:hover { border-color: var(--accent); }
+  .promo .ico { width: 48px; height: 48px; flex: none; border-radius: 12px; display: grid; place-items: center; background: var(--accent-soft); color: var(--accent-ink); }
+  .promo .ico svg { width: 24px; height: 24px; color: inherit; }
+  .promo b { display: block; font-size: 18px; }
+  .promo span { color: var(--muted); }
+  .promo .go { margin-left: auto; font-size: 22px; color: var(--faint); }
+
+  footer { padding: 36px 0 48px; border-top: 1px solid var(--line); color: var(--faint); font-size: 14px; }
+  footer .row { display: flex; flex-wrap: wrap; gap: 8px 20px; margin-bottom: 10px; }
+  footer a { color: var(--muted); text-decoration: none; }
+  footer a:hover { color: var(--fg); text-decoration: underline; }
+
+  @media (max-width: 860px) {
+    .hero { grid-template-columns: 1fr; padding-top: 24px; gap: 32px; }
+    .grid { grid-template-columns: 1fr; }
+    .shots { grid-template-columns: 1fr; }
+    nav a.plain { display: none; }
+    .promo { flex-wrap: wrap; }
+    .promo .go { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav>
+    <a class="brand" href="./"><img src="assets/icon-512.png" alt="">F Clean Feed</a>
+    <span class="spacer"></span>
+    <a class="plain" href="#features" data-t="navFeatures"></a>
+    <a class="plain" href="#install" data-t="navInstall"></a>
+    <a class="plain" href="https://github.com/viennv96/f-clean-feed">GitHub</a>
+    <button class="lang" id="lang" type="button"></button>
+  </nav>
+
+  <header class="hero">
+    <div>
+      <span class="eyebrow"><i></i><span data-t="eyebrow"></span></span>
+      <h1 data-t="h1"></h1>
+      <p class="lead" data-t="lead"></p>
+      <div class="cta">
+        <a class="btn primary" href="https://github.com/viennv96/f-clean-feed/releases/latest" data-t="download"></a>
+        <a class="btn ghost" href="#install"><span data-t="store"></span> <small data-t="soon"></small></a>
+      </div>
+      <p class="note" data-t="note"></p>
+    </div>
+    <img class="shot" data-img="screenshot-1" alt="F Clean Feed popup">
+  </header>
+</div>
+
+<section id="features">
+  <div class="wrap">
+    <h2 data-t="featTitle"></h2>
+    <p class="sub" data-t="featSub"></p>
+    <div class="grid">
+      <div class="card">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11v2a1 1 0 0 0 1 1h2l5 4V6L6 10H4a1 1 0 0 0-1 1z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/></svg>
+        <h3 data-t="f1t"></h3><p data-t="f1"></p>
+      </div>
+      <div class="card">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M3 9h18M8 4l3 5M14 4l3 5"/><path d="M10.5 12.5v4l3.5-2z"/></svg>
+        <h3 data-t="f2t"></h3><p data-t="f2"></p>
+      </div>
+      <div class="card">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.9 4.6L18.5 9.5l-4.6 1.9L12 16l-1.9-4.6L5.5 9.5l4.6-1.9z"/><path d="M19 15l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z"/></svg>
+        <h3 data-t="f3t"></h3><p data-t="f3"></p>
+      </div>
+      <div class="card">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg>
+        <h3 data-t="f4t"></h3><p data-t="f4"></p>
+      </div>
+      <div class="card">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="M8.5 4v16M15.5 4v16" stroke-dasharray="2 2.4"/></svg>
+        <h3 data-t="f5t"></h3><p data-t="f5"></p>
+      </div>
+      <div class="card">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/></svg>
+        <h3 data-t="f6t"></h3><p data-t="f6"></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap shots">
+    <img data-img="screenshot-2" alt="">
+    <img data-img="screenshot-3" alt="">
+  </div>
+</section>
+
+<section id="install">
+  <div class="wrap">
+    <h2 data-t="instTitle"></h2>
+    <p class="sub" data-t="instSub"></p>
+    <ol class="steps">
+      <li data-t="s1"></li>
+      <li data-t="s2"></li>
+      <li data-t="s3"></li>
+      <li data-t="s4"></li>
+    </ol>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <a class="card promo" href="https://viennv.dev" target="_blank" rel="noopener">
+      <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="7" rx="2"/><rect x="3" y="13" width="18" height="7" rx="2"/><path d="M7 7.5h.01M7 16.5h.01M11 7.5h6M11 16.5h6"/></svg></span>
+      <span><b data-t="promoT"></b><span data-t="promo"></span></span>
+      <span class="go">→</span>
+    </a>
+  </div>
+</section>
+
+<div class="wrap">
+  <footer>
+    <div class="row">
+      <span><span data-t="by"></span> <a href="https://viennv.dev">Nguyễn Văn Viên</a></span>
+      <a href="privacy-policy.html" data-t="privacy"></a>
+      <a href="https://github.com/viennv96/f-clean-feed">GitHub</a>
+      <a href="https://github.com/viennv96/f-clean-feed/issues" data-t="support"></a>
+    </div>
+    <div data-t="tm"></div>
+  </footer>
+</div>
+
+<script>
+  const T = {
+    vi: {
+      langBtn: "English", navFeatures: "Tính năng", navInstall: "Cài đặt",
+      eyebrow: "Miễn phí · Không cần tài khoản",
+      h1: "Bảng tin Facebook™ gọn gàng, không nhiễu.",
+      lead: "F Clean Feed tự động ẩn bài được tài trợ, bài gợi ý, Reels và Tin. Chỉ còn bạn bè và những trang bạn thực sự theo dõi.",
+      download: "Tải bản mới nhất", store: "Chrome Web Store", soon: "· sắp có",
+      note: "Dành cho Google Chrome và các trình duyệt Chromium (Edge, Brave, Cốc Cốc).",
+      featTitle: "Mọi thứ bạn cần để lướt yên tĩnh", featSub: "13 tuỳ chọn, mỗi tuỳ chọn một công tắc. Có hiệu lực ngay, không cần tải lại trang.",
+      f1t: "Chặn quảng cáo", f1: "Bài được tài trợ trong bảng tin, quảng cáo cột phải, Marketplace và kết quả tìm kiếm.",
+      f2t: "Ẩn Reels và Tin", f2: "Bỏ khay Reels và thanh Tin. Muốn thì vẫn giữ Reels do bạn bè chia sẻ.",
+      f3t: "Bớt gợi ý", f3: "\"Gợi ý cho bạn\", \"Những người bạn có thể biết\" và nhóm gợi ý.",
+      f4t: "Không nháy quảng cáo", f4: "Bài được nhận diện ngay khi tải, trước khi trình duyệt kịp vẽ lên màn hình.",
+      f5t: "Chế độ gọn", f5: "Ẩn hai cột bên ở trang chủ để bảng tin nằm giữa, dễ tập trung hơn.",
+      f6t: "Riêng tư tuyệt đối", f6: "Không máy chủ, không analytics, không mã bên thứ ba. Chỉ chạy trên facebook.com.",
+      instTitle: "Cài đặt", instSub: "Trong lúc chờ Chrome Web Store duyệt, bạn có thể cài thủ công trong một phút:",
+      s1: "Tải file <b>f-clean-feed-…zip</b> ở trang <a href=\"https://github.com/viennv96/f-clean-feed/releases/latest\">Releases</a> và giải nén.",
+      s2: "Mở <code>chrome://extensions</code> và bật <b>Developer mode</b> (góc trên bên phải).",
+      s3: "Bấm <b>Load unpacked</b> và chọn thư mục vừa giải nén.",
+      s4: "Tải lại facebook.com. Xong!",
+      promoT: "Cần VPS tốc độ cao?", promo: "Thuê VPS ổn định, giá tốt tại viennv.dev",
+      by: "Phát triển bởi", privacy: "Chính sách quyền riêng tư", support: "Hỗ trợ",
+      tm: "Facebook là thương hiệu của Meta Platforms, Inc. F Clean Feed là dự án độc lập, không liên kết hay được Meta bảo trợ.",
+    },
+    en: {
+      langBtn: "Tiếng Việt", navFeatures: "Features", navInstall: "Install",
+      eyebrow: "Free · No account",
+      h1: "Your Facebook™ feed, without the noise.",
+      lead: "F Clean Feed automatically hides sponsored posts, suggestions, Reels and Stories. Just the people and pages you actually follow.",
+      download: "Download latest", store: "Chrome Web Store", soon: "· coming soon",
+      note: "For Google Chrome and Chromium browsers (Edge, Brave and others).",
+      featTitle: "Everything you need for a quiet feed", featSub: "13 controls, one switch each. Changes apply instantly, no reload.",
+      f1t: "Ad blocking", f1: "Sponsored posts in the feed, right-column ads, Marketplace and search result ads.",
+      f2t: "Hide Reels & Stories", f2: "Drop the Reels trays and Stories bar. Optionally keep reels shared by friends.",
+      f3t: "Fewer suggestions", f3: "\"Suggested for you\", People You May Know and suggested groups.",
+      f4t: "No ad flicker", f4: "Units are recognised as they load, before the browser paints them.",
+      f5t: "Clean mode", f5: "Hide both side columns on the home page for a focused, centred feed.",
+      f6t: "Private by design", f6: "No servers, no analytics, no third-party code. Runs only on facebook.com.",
+      instTitle: "Install", instSub: "While the Chrome Web Store review is pending, install it manually in a minute:",
+      s1: "Download <b>f-clean-feed-…zip</b> from <a href=\"https://github.com/viennv96/f-clean-feed/releases/latest\">Releases</a> and unzip it.",
+      s2: "Open <code>chrome://extensions</code> and turn on <b>Developer mode</b> (top right).",
+      s3: "Click <b>Load unpacked</b> and pick the unzipped folder.",
+      s4: "Reload facebook.com. Done!",
+      promoT: "Need a fast VPS?", promo: "Reliable VPS hosting at viennv.dev",
+      by: "Made by", privacy: "Privacy policy", support: "Support",
+      tm: "Facebook is a trademark of Meta Platforms, Inc. F Clean Feed is an independent project and is not affiliated with or endorsed by Meta.",
+    },
+  };
+  // Strings with markup are authored above, never taken from the URL or user input.
+  const HTML_KEYS = new Set(["s1", "s2", "s3", "s4"]);
+  let lang;
+  try { lang = localStorage.getItem("fcf-lang"); } catch (e) {}
+  if (!T[lang]) lang = (navigator.language || "").toLowerCase().startsWith("vi") ? "vi" : "en";
+  function apply() {
+    document.documentElement.lang = lang;
+    for (const el of document.querySelectorAll("[data-t]")) {
+      const v = T[lang][el.dataset.t];
+      if (HTML_KEYS.has(el.dataset.t)) el.innerHTML = v; else el.textContent = v;
+    }
+    for (const img of document.querySelectorAll("[data-img]")) img.src = `assets/${lang}-${img.dataset.img}.png`;
+    document.getElementById("lang").textContent = T[lang].langBtn;
+  }
+  document.getElementById("lang").addEventListener("click", () => {
+    lang = lang === "vi" ? "en" : "vi";
+    try { localStorage.setItem("fcf-lang", lang); } catch (e) {}
+    apply();
+  });
+  apply();
+</script>
+</body>
+</html>

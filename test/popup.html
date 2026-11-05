@@ -1,0 +1,33 @@
+<!doctype html>
+<!-- Renders popup/popup.html with an in-memory chrome.* stub. ?lang=en for English. -->
+<html>
+<head><meta charset="utf-8"><link rel="stylesheet" href="../popup/popup.css"></head>
+<body>
+<script type="module">
+  const lang = new URLSearchParams(location.search).get("lang") || "vi";
+  const messages = await (await fetch(`../_locales/${lang}/messages.json`)).json();
+  const areas = { sync: {}, local: { stats: { day: new Date().toISOString().slice(0, 10), today: { sponsored: 12, reels: 30 }, total: { sponsored: 2524, suggested: 12847, reels: 773, market: 41 } } } };
+  const listeners = [];
+  const area = (name) => ({
+    get: async (k) => ({ [k]: areas[name][k] }),
+    set: async (o) => {
+      for (const [k, v] of Object.entries(o)) {
+        const oldValue = areas[name][k];
+        areas[name][k] = v;
+        listeners.forEach((l) => l({ [k]: { oldValue, newValue: v } }, name));
+      }
+    },
+  });
+  window.chrome = {
+    i18n: { getMessage: (k, sub) => (messages[k]?.message ?? `?${k}`).replace(/\$COUNT\$/g, sub ?? "") },
+    runtime: { getManifest: () => ({ version: "1.0.0" }) },
+    storage: { sync: area("sync"), local: area("local"), onChanged: { addListener: (l) => listeners.push(l) } },
+  };
+  window.__areas = areas;
+  const html = await (await fetch("../popup/popup.html")).text();
+  document.body.innerHTML = new DOMParser().parseFromString(html, "text/html").body.innerHTML.replace(/<script[\s\S]*?<\/script>/g, "");
+  document.querySelectorAll("img").forEach((i) => (i.src = "../icons/48.png"));
+  await import("../popup/popup.js");
+</script>
+</body>
+</html>

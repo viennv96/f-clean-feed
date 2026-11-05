@@ -1,0 +1,127 @@
+{
+  "name": {
+    "message": "F Clean Feed: Chặn quảng cáo & Reels cho Facebook™"
+  },
+  "description": {
+    "message": "Ẩn bài tài trợ, bài gợi ý, Reels và Tin trên Facebook™. Riêng tư: không tài khoản, không theo dõi. Không liên kết với Meta."
+  },
+  "kind_sponsored": {
+    "message": "Bài được tài trợ"
+  },
+  "kind_suggested": {
+    "message": "Gợi ý cho bạn"
+  },
+  "kind_reels": {
+    "message": "Reels / Thước phim"
+  },
+  "kind_pymk": {
+    "message": "Những người bạn có thể biết"
+  },
+  "kind_groups": {
+    "message": "Nhóm gợi ý"
+  },
+  "kind_rail": {
+    "message": "Quảng cáo cột phải"
+  },
+  "modeLabel": {
+    "message": "Mục bị ẩn"
+  },
+  "modeHide": {
+    "message": "Xoá khỏi trang"
+  },
+  "modeCollapse": {
+    "message": "Thu gọn"
+  },
+  "statsToday": {
+    "message": "+$COUNT$ hôm nay",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "statsTotal": {
+    "message": "mục đã ẩn"
+  },
+  "statsReset": {
+    "message": "Đặt lại thống kê"
+  },
+  "collapsedSponsored": {
+    "message": "Đã ẩn bài được tài trợ · bấm để xem"
+  },
+  "collapsedSuggested": {
+    "message": "Đã ẩn bài gợi ý · bấm để xem"
+  },
+  "collapsedReels": {
+    "message": "Đã ẩn Reels · bấm để xem"
+  },
+  "collapsedPymk": {
+    "message": "Đã ẩn Những người bạn có thể biết · bấm để xem"
+  },
+  "collapsedGroups": {
+    "message": "Đã ẩn nhóm gợi ý · bấm để xem"
+  },
+  "collapsedRail": {
+    "message": "Đã ẩn quảng cáo · bấm để xem"
+  },
+  "kind_allowFriendReels": {
+    "message": "Giữ Reels của bạn bè"
+  },
+  "kind_stories": {
+    "message": "Tin (Stories)"
+  },
+  "kind_market": {
+    "message": "Quảng cáo Marketplace"
+  },
+  "kind_search": {
+    "message": "Quảng cáo khi tìm kiếm"
+  },
+  "kind_birthdays": {
+    "message": "Nhắc sinh nhật"
+  },
+  "kind_badges": {
+    "message": "Số đếm thông báo"
+  },
+  "kind_clean": {
+    "message": "Chế độ gọn (ẩn 2 cột bên)"
+  },
+  "groupFeed": {
+    "message": "Bảng tin"
+  },
+  "groupAds": {
+    "message": "Quảng cáo khác"
+  },
+  "groupLayout": {
+    "message": "Giao diện"
+  },
+  "shortName": {
+    "message": "F Clean Feed"
+  },
+  "statusOn": {
+    "message": "Đang bảo vệ bảng tin"
+  },
+  "statusOff": {
+    "message": "Đang tạm dừng"
+  },
+  "statsAds": {
+    "message": "Quảng cáo"
+  },
+  "statsSuggested": {
+    "message": "Gợi ý"
+  },
+  "statsReels": {
+    "message": "Reels"
+  },
+  "footerPrivacy": {
+    "message": "Không thu thập dữ liệu"
+  },
+  "promoTitle": {
+    "message": "Cần VPS tốc độ cao?"
+  },
+  "promoText": {
+    "message": "Thuê VPS ổn định, giá tốt tại viennv.dev"
+  },
+  "authorBy": {
+    "message": "Phát triển bởi"
+  }
+}

@@ -1,0 +1,73 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+  <header class="top">
+    <img class="logo" src="../icons/48.png" alt="" width="32" height="32" />
+    <div class="brand">
+      <h1 data-i18n="shortName"></h1>
+      <p class="status"><i></i><span id="status"></span></p>
+    </div>
+    <label class="switch big">
+      <input type="checkbox" id="enabled" />
+      <span></span>
+    </label>
+  </header>
+
+  <section class="card stats">
+    <div class="total">
+      <b id="total">0</b>
+      <span data-i18n="statsTotal"></span>
+    </div>
+    <span class="today" id="today"></span>
+    <ul class="breakdown">
+      <li><b id="b-ads">0</b><span data-i18n="statsAds"></span></li>
+      <li><b id="b-suggested">0</b><span data-i18n="statsSuggested"></span></li>
+      <li><b id="b-reels">0</b><span data-i18n="statsReels"></span></li>
+    </ul>
+  </section>
+
+  <section class="mode">
+    <span data-i18n="modeLabel"></span>
+    <div class="seg" role="radiogroup">
+      <button role="radio" data-mode="hide" data-i18n="modeHide"></button>
+      <button role="radio" data-mode="collapse" data-i18n="modeCollapse"></button>
+    </div>
+  </section>
+
+  <div id="kinds"></div>
+
+  <a class="card promo" href="https://viennv.dev" target="_blank" rel="noopener">
+    <span class="promo-ico" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="7" rx="2"/><rect x="3" y="13" width="18" height="7" rx="2"/><path d="M7 7.5h.01M7 16.5h.01M11 7.5h6M11 16.5h6"/></svg>
+    </span>
+    <span class="promo-text">
+      <b data-i18n="promoTitle"></b>
+      <small data-i18n="promoText"></small>
+    </span>
+    <span class="promo-go" aria-hidden="true">→</span>
+  </a>
+
+  <footer>
+    <span id="version"></span>
+    <span class="dot">·</span>
+    <span data-i18n="footerPrivacy"></span>
+    <button id="reset" class="link" data-i18n="statsReset"></button>
+  </footer>
+  <p class="author"><span data-i18n="authorBy"></span> <a href="https://viennv.dev" target="_blank" rel="noopener">Nguyễn Văn Viên</a></p>
+
+  <template id="kind-row">
+    <label class="row">
+      <span class="ico"></span>
+      <span class="name"></span>
+      <small class="count"></small>
+      <span class="switch"><input type="checkbox" /><span></span></span>
+    </label>
+  </template>
+
+  <script type="module" src="popup.js"></script>
+</body>
+</html>

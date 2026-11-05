@@ -1,0 +1,127 @@
+{
+  "name": {
+    "message": "F Clean Feed: Ad & Reels Blocker for Facebook™"
+  },
+  "description": {
+    "message": "Hide sponsored posts, suggestions, Reels and Stories on Facebook™. Private: no account, no tracking. Not affiliated with Meta."
+  },
+  "kind_sponsored": {
+    "message": "Sponsored posts"
+  },
+  "kind_suggested": {
+    "message": "Suggested for you"
+  },
+  "kind_reels": {
+    "message": "Reels"
+  },
+  "kind_pymk": {
+    "message": "People you may know"
+  },
+  "kind_groups": {
+    "message": "Suggested groups"
+  },
+  "kind_rail": {
+    "message": "Right-column ads"
+  },
+  "modeLabel": {
+    "message": "Hidden items"
+  },
+  "modeHide": {
+    "message": "Remove"
+  },
+  "modeCollapse": {
+    "message": "Collapse"
+  },
+  "statsToday": {
+    "message": "+$COUNT$ today",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "statsTotal": {
+    "message": "items hidden"
+  },
+  "statsReset": {
+    "message": "Reset stats"
+  },
+  "collapsedSponsored": {
+    "message": "Sponsored post hidden · click to show"
+  },
+  "collapsedSuggested": {
+    "message": "Suggested post hidden · click to show"
+  },
+  "collapsedReels": {
+    "message": "Reels hidden · click to show"
+  },
+  "collapsedPymk": {
+    "message": "People you may know hidden · click to show"
+  },
+  "collapsedGroups": {
+    "message": "Suggested groups hidden · click to show"
+  },
+  "collapsedRail": {
+    "message": "Ad hidden · click to show"
+  },
+  "kind_allowFriendReels": {
+    "message": "Keep friends' reels"
+  },
+  "kind_stories": {
+    "message": "Stories"
+  },
+  "kind_market": {
+    "message": "Marketplace ads"
+  },
+  "kind_search": {
+    "message": "Search result ads"
+  },
+  "kind_birthdays": {
+    "message": "Birthday reminders"
+  },
+  "kind_badges": {
+    "message": "Notification counters"
+  },
+  "kind_clean": {
+    "message": "Clean mode (hide side columns)"
+  },
+  "groupFeed": {
+    "message": "News feed"
+  },
+  "groupAds": {
+    "message": "Other ads"
+  },
+  "groupLayout": {
+    "message": "Interface"
+  },
+  "shortName": {
+    "message": "F Clean Feed"
+  },
+  "statusOn": {
+    "message": "Protecting your feed"
+  },
+  "statusOff": {
+    "message": "Paused"
+  },
+  "statsAds": {
+    "message": "Ads"
+  },
+  "statsSuggested": {
+    "message": "Suggestions"
+  },
+  "statsReels": {
+    "message": "Reels"
+  },
+  "footerPrivacy": {
+    "message": "No data collected"
+  },
+  "promoTitle": {
+    "message": "Need a fast VPS?"
+  },
+  "promoText": {
+    "message": "Reliable VPS hosting at viennv.dev"
+  },
+  "authorBy": {
+    "message": "Made by"
+  }
+}

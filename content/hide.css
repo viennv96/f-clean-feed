@@ -1,0 +1,57 @@
+/*
+ * main.js classifies each element once (data-fbc-kind). bridge.js lists the
+ * kinds to hide on <html data-fbc-hide="sponsored reels ...">, so toggling a
+ * setting is a pure CSS change and needs no re-scan.
+ */
+
+/* Feed-like kinds: removed in "hide" mode, replaced by a placeholder in "collapse" mode. */
+html[data-fbc-mode="hide"][data-fbc-hide~="sponsored"] [data-fbc-kind="sponsored"],
+html[data-fbc-mode="hide"][data-fbc-hide~="suggested"] [data-fbc-kind="suggested"],
+html[data-fbc-mode="hide"][data-fbc-hide~="reels"] [data-fbc-kind="reels"],
+html[data-fbc-mode="hide"][data-fbc-hide~="reelpost"] [data-fbc-kind="reelpost"],
+html[data-fbc-mode="hide"][data-fbc-hide~="pymk"] [data-fbc-kind="pymk"],
+html[data-fbc-mode="hide"][data-fbc-hide~="groups"] [data-fbc-kind="groups"],
+html[data-fbc-mode="hide"][data-fbc-hide~="search"] [data-fbc-kind="search"],
+/* Layout kinds: always removed outright; a placeholder would break the grid or rail. */
+html[data-fbc-hide~="market"] [data-fbc-kind="market"],
+html[data-fbc-hide~="rail"] [data-fbc-kind="rail"],
+html[data-fbc-hide~="birthdays"] [data-fbc-kind="birthdays"],
+html[data-fbc-hide~="stories"] [data-fbc-kind="stories"],
+html[data-fbc-hide~="badges"] [data-fbc-kind="badges"],
+html[data-fbc-home][data-fbc-hide~="clean"] [data-fbc-kind="clean"] {
+  display: none !important;
+}
+
+html[data-fbc-mode="collapse"][data-fbc-hide~="sponsored"] [data-fbc-kind="sponsored"]:not([data-fbc-revealed]) > *,
+html[data-fbc-mode="collapse"][data-fbc-hide~="suggested"] [data-fbc-kind="suggested"]:not([data-fbc-revealed]) > *,
+html[data-fbc-mode="collapse"][data-fbc-hide~="reels"] [data-fbc-kind="reels"]:not([data-fbc-revealed]) > *,
+html[data-fbc-mode="collapse"][data-fbc-hide~="reelpost"] [data-fbc-kind="reelpost"]:not([data-fbc-revealed]) > *,
+html[data-fbc-mode="collapse"][data-fbc-hide~="pymk"] [data-fbc-kind="pymk"]:not([data-fbc-revealed]) > *,
+html[data-fbc-mode="collapse"][data-fbc-hide~="groups"] [data-fbc-kind="groups"]:not([data-fbc-revealed]) > *,
+html[data-fbc-mode="collapse"][data-fbc-hide~="search"] [data-fbc-kind="search"]:not([data-fbc-revealed]) > * {
+  display: none !important;
+}
+
+html[data-fbc-mode="collapse"][data-fbc-hide~="sponsored"] [data-fbc-kind="sponsored"]:not([data-fbc-revealed])::before,
+html[data-fbc-mode="collapse"][data-fbc-hide~="suggested"] [data-fbc-kind="suggested"]:not([data-fbc-revealed])::before,
+html[data-fbc-mode="collapse"][data-fbc-hide~="reels"] [data-fbc-kind="reels"]:not([data-fbc-revealed])::before,
+html[data-fbc-mode="collapse"][data-fbc-hide~="reelpost"] [data-fbc-kind="reelpost"]:not([data-fbc-revealed])::before,
+html[data-fbc-mode="collapse"][data-fbc-hide~="pymk"] [data-fbc-kind="pymk"]:not([data-fbc-revealed])::before,
+html[data-fbc-mode="collapse"][data-fbc-hide~="groups"] [data-fbc-kind="groups"]:not([data-fbc-revealed])::before,
+html[data-fbc-mode="collapse"][data-fbc-hide~="search"] [data-fbc-kind="search"]:not([data-fbc-revealed])::before {
+  content: attr(data-fbc-label);
+  display: block;
+  margin: 0 0 12px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font: 13px/1.3 system-ui, -apple-system, "Segoe UI", sans-serif;
+  color: var(--secondary-text, #65676b);
+  background: var(--card-background, #fff);
+  cursor: pointer;
+}
+
+/* Clean mode: let the feed use the space the side columns left. */
+html[data-fbc-home][data-fbc-hide~="clean"] [role="main"] {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
