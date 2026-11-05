@@ -18,7 +18,7 @@ Mọi nội dung dưới đây dán thẳng vào [Chrome Web Store Developer Das
 
 | Trường | Giá trị |
 |---|---|
-| Tên | Lấy từ manifest: **F Clean Feed: Ad & Reels Blocker for Facebook™** (tiếng Việt: *F Clean Feed: Chặn quảng cáo & Reels cho Facebook™*) |
+| Tên | Lấy từ manifest: **F Clean Feed: Ad & Reels Blocker for Facebook** (tiếng Việt: *F Clean Feed: Chặn quảng cáo & Reels cho Facebook*) |
 | Tóm tắt | Lấy từ manifest (≤ 132 ký tự) |
 | Danh mục | Social & Communication |
 | Ngôn ngữ | English (mặc định), Tiếng Việt |
@@ -31,7 +31,7 @@ Mọi nội dung dưới đây dán thẳng vào [Chrome Web Store Developer Das
 ### Mô tả chi tiết – English
 
 ```
-F Clean Feed gives you a calmer Facebook™ feed: just the people, groups and pages you actually follow.
+F Clean Feed gives you a calmer Facebook feed: just the people, groups and pages you actually follow.
 
 WHAT IT HIDES
 • Sponsored posts in the news feed
@@ -63,7 +63,7 @@ Facebook is a trademark of Meta Platforms, Inc. F Clean Feed is an independent p
 ### Mô tả chi tiết – Tiếng Việt
 
 ```
-F Clean Feed giúp bảng tin Facebook™ gọn gàng hơn: chỉ còn bạn bè, nhóm và trang bạn thực sự theo dõi.
+F Clean Feed giúp bảng tin Facebook gọn gàng hơn: chỉ còn bạn bè, nhóm và trang bạn thực sự theo dõi.
 
 ẨN NHỮNG GÌ
 • Bài được tài trợ trên bảng tin
@@ -118,7 +118,7 @@ F Clean Feed hides unwanted units on facebook.com – sponsored posts, recommend
 
 ## 4. Rủi ro khi duyệt
 
-- **Thương hiệu:** tên có chữ "Facebook™". Đây là cách dùng mô tả, phổ biến trên store và đã kèm tuyên bố "không liên kết với Meta" ở mô tả, ảnh và chính sách. Icon không dùng logo hay màu của Facebook. Nếu bị từ chối vì lý do thương hiệu, đổi tên thành `F Clean Feed – Ad & Reels Blocker` và chỉ nhắc Facebook trong phần mô tả.
+- **Thương hiệu:** tên có chữ "Facebook". Đây là cách dùng mô tả, phổ biến trên store và đã kèm tuyên bố "không liên kết với Meta" ở mô tả, ảnh và chính sách. Icon không dùng logo hay màu của Facebook. Nếu bị từ chối vì lý do thương hiệu, đổi tên thành `F Clean Feed – Ad & Reels Blocker` và chỉ nhắc Facebook trong phần mô tả.
 - **Liên kết quảng bá VPS:** chỉ nằm trong popup và đã ghi rõ trong mô tả. Không được chèn quảng cáo hay link vào trang Facebook: Google cấm extension chèn quảng cáo vào trang của bên thứ ba, đồng thời điều đó mâu thuẫn với chính mục đích của một trình chặn quảng cáo.
 - **`world: "MAIN"`:** script chạy trong ngữ cảnh trang để đọc dữ liệu React. Đây là API chính thức của MV3, không phải remote code, nhưng reviewer có thể hỏi. Câu trả lời: script chỉ đọc thuộc tính DOM và React fiber để phân loại bài, không gửi request, không sửa dữ liệu trang.
 - Thời gian duyệt thường từ vài ngày đến khoảng 2 tuần.

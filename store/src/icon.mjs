@@ -8,8 +8,10 @@ const NAVY_A = "#12355E";
 const NAVY_B = "#0B1F3A";
 const EMERALD = "#10B981";
 
-function svg(size) {
-  const pad = size === 128 ? 16 : size >= 48 ? 2 : size >= 32 ? 1 : 0;
+// `square`: full-bleed tile with no rounding, for platforms that apply their
+// own mask (iOS home screen, Android adaptive icons).
+function svg(size, { square = false } = {}) {
+  const pad = square ? 0 : size === 128 ? 16 : size >= 48 ? 2 : size >= 32 ? 1 : 0;
   const s = (size - pad * 2) / 96; // artwork drawn on a 96-unit tile
   const detail = size >= 48 ? "full" : size >= 32 ? "mid" : "min";
   const t = (v) => +(pad + v * s).toFixed(2);
@@ -43,8 +45,8 @@ function svg(size) {
       <stop offset="0" stop-color="#34D399"/><stop offset="1" stop-color="${EMERALD}"/>
     </linearGradient>
   </defs>
-  <rect x="${pad}" y="${pad}" width="${size - pad * 2}" height="${size - pad * 2}" rx="${d(22)}" fill="url(#g)"/>
-  ${size >= 48 ? `<rect x="${pad}" y="${pad}" width="${size - pad * 2}" height="${size - pad * 2}" rx="${d(22)}" fill="none" stroke="#ffffff" stroke-opacity=".08" stroke-width="${d(1.5)}"/>` : ""}
+  <rect x="${pad}" y="${pad}" width="${size - pad * 2}" height="${size - pad * 2}" rx="${square ? 0 : d(22)}" fill="url(#g)"/>
+  ${size >= 48 && !square ? `<rect x="${pad}" y="${pad}" width="${size - pad * 2}" height="${size - pad * 2}" rx="${d(22)}" fill="none" stroke="#ffffff" stroke-opacity=".08" stroke-width="${d(1.5)}"/>` : ""}
   <rect x="${t(card.x)}" y="${t(card.y)}" width="${d(card.w)}" height="${d(card.h)}" rx="${d(9)}" fill="#ffffff"/>
   ${lines}
   <circle cx="${t(badge.cx)}" cy="${t(badge.cy)}" r="${d(badge.r + 4)}" fill="${NAVY_B}"/>
@@ -55,3 +57,6 @@ function svg(size) {
 
 const out = process.argv[2] || ".";
 for (const size of [16, 32, 48, 128, 512]) writeFileSync(`${out}/icon-${size}.svg`, svg(size));
+// Website: SVG favicon, apple-touch-icon and web-manifest icons.
+writeFileSync(`${out}/favicon.svg`, svg(32));
+for (const size of [180, 192, 512]) writeFileSync(`${out}/icon-square-${size}.svg`, svg(size, { square: true }));

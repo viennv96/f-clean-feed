@@ -2,7 +2,7 @@
 <!--
   Chrome Web Store graphics. Served over HTTP from clean-feed/ (the popup is
   embedded live from test/popup.html), rendered by store/build.sh.
-  ?s=1..4 screenshots (1280×800), ?s=tile (440×280), ?s=marquee (1400×560); &lang=en|vi
+  ?s=1..4 screenshots (1280×800), ?s=tile (440×280), ?s=marquee (1400×560), ?s=og (1200×630); &lang=en|vi
 -->
 <html>
 <head>
@@ -73,6 +73,13 @@
   .marquee { width: 1400px; height: 560px; padding: 0 110px; }
   .marquee h1 { font-size: 60px; }
   .marquee .popup { height: 470px; }
+  /* Open Graph / Twitter thumbnail for the website (1200×630). */
+  .og { width: 1200px; height: 630px; padding: 0 84px; gap: 56px; }
+  .og h1 { font-size: 58px; margin-bottom: 18px; }
+  .og p.lead { font-size: 22px; margin-bottom: 26px; }
+  .og .popup { height: 540px; align-self: flex-end; margin-bottom: -40px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 10px; }
+  .chips span { padding: 7px 14px; border-radius: 999px; font-size: 16px; font-weight: 600; color: #d6fbe9; background: rgba(52, 211, 153, .14); border: 1px solid rgba(52, 211, 153, .35); }
 </style>
 </head>
 <body>
@@ -83,7 +90,7 @@ const s = q.get("s") || "1";
 const T = {
   en: {
     brand: "F Clean Feed",
-    h1: "Your Facebook™ feed,<br>without the noise.",
+    h1: "Your Facebook feed,<br>without the noise.",
     lead: "Hide sponsored posts, suggestions and Reels automatically. Just the people and pages you follow.",
     p1: ["Sponsored posts & side-column ads", "Suggested posts, groups & people", "Reels and Stories, your choice"],
     h2: "See only what<br>you came for.",
@@ -98,11 +105,14 @@ const T = {
     lead4: "Everything runs inside your browser. F Clean Feed has no servers and never sees what you read.",
     c: [["No account", "Works the moment you install it."], ["No tracking", "No analytics, no third-party code."], ["No servers", "Your settings stay in Chrome sync."], ["Minimal access", "Only facebook.com, only to tidy the page."]],
     fine: "Facebook is a trademark of Meta Platforms, Inc. F Clean Feed is not affiliated with or endorsed by Meta.",
-    tile: "Ad & Reels blocker for Facebook™",
+    tile: "Ad & Reels blocker for Facebook",
+    ogH1: "Block ads & Reels<br>on Facebook",
+    ogLead: "Free Chrome extension. Sponsored posts, suggestions, Reels and Stories, gone.",
+    ogChips: ["Free", "No account", "No tracking"],
   },
   vi: {
     brand: "F Clean Feed",
-    h1: "Bảng tin Facebook™<br>gọn gàng, không nhiễu.",
+    h1: "Bảng tin Facebook<br>gọn gàng, không nhiễu.",
     lead: "Tự động ẩn bài được tài trợ, bài gợi ý và Reels. Chỉ còn bạn bè và trang bạn theo dõi.",
     p1: ["Bài tài trợ & quảng cáo cột phải", "Bài, nhóm & người được gợi ý", "Reels và Tin, tuỳ bạn chọn"],
     h2: "Chỉ xem đúng<br>thứ bạn muốn.",
@@ -117,7 +127,10 @@ const T = {
     lead4: "Mọi thứ chạy trong trình duyệt của bạn. F Clean Feed không có máy chủ và không biết bạn đọc gì.",
     c: [["Không tài khoản", "Dùng ngay sau khi cài."], ["Không theo dõi", "Không analytics, không mã bên thứ ba."], ["Không máy chủ", "Cài đặt lưu trong Chrome sync."], ["Quyền tối thiểu", "Chỉ facebook.com, chỉ để dọn trang."]],
     fine: "Facebook là thương hiệu của Meta Platforms, Inc. F Clean Feed không liên kết hay được Meta bảo trợ.",
-    tile: "Chặn quảng cáo & Reels cho Facebook™",
+    tile: "Chặn quảng cáo & Reels cho Facebook",
+    ogH1: "Chặn quảng cáo<br>& Reels trên Facebook",
+    ogLead: "Tiện ích Chrome miễn phí: ẩn bài tài trợ, gợi ý, Reels và Tin chỉ với một chạm.",
+    ogChips: ["Miễn phí", "Không cần tài khoản", "Không theo dõi"],
   },
 }[lang];
 
@@ -147,6 +160,7 @@ const pages = {
       <div class="grid">${T.c.map(([b, sp], i) => `<div class="pc">${PICONS[i]}<b>${b}</b><span>${sp}</span></div>`).join("")}</div>
       <div class="fine">${T.fine}</div></div>`,
   tile: `<div class="tile dark"><img src="${icon}" alt=""><b>${T.brand}</b><span>${T.tile}</span></div>`,
+  og: `<div class="frame dark og"><div class="copy">${eyebrow}<h1>${T.ogH1}</h1><p class="lead">${T.ogLead}</p><div class="chips">${T.ogChips.map((c) => `<span>${c}</span>`).join("")}</div></div>${popup(true)}</div>`,
   marquee: `<div class="frame dark marquee"><div class="copy">${eyebrow}<h1>${T.h1}</h1><p class="lead">${T.lead}</p></div>${popup(true)}</div>`,
 };
 document.body.innerHTML = pages[s];

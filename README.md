@@ -5,8 +5,8 @@
 <h1 align="center">F Clean Feed</h1>
 
 <p align="center">
-  Ad &amp; Reels blocker for Facebook™: free, private, no account.<br>
-  Chặn quảng cáo &amp; Reels cho Facebook™: miễn phí, riêng tư, không cần tài khoản.
+  Ad &amp; Reels blocker for Facebook: free, private, no account.<br>
+  Chặn quảng cáo &amp; Reels cho Facebook: miễn phí, riêng tư, không cần tài khoản.
 </p>
 
 <p align="center">

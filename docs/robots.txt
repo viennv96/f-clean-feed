@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://viennv96.github.io/f-clean-feed/sitemap.xml

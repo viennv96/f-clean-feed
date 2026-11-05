@@ -40,3 +40,14 @@ for lang in en vi; do
   for n in 1 2 3; do cp "store/assets/$lang/screenshot-$n.png" "docs/assets/$lang-screenshot-$n.png"; done
 done
 echo "Copied graphics to docs/assets"
+
+# Website: link-preview thumbnails (Open Graph / Twitter, 1200×630).
+shot "s=og&lang=vi" docs/assets/og-image.png 1200 630 dark
+shot "s=og&lang=en" docs/assets/og-image-en.png 1200 630 dark
+for f in og-image og-image-en; do
+  sips -s format jpeg -s formatOptions 88 "docs/assets/$f.png" --out "docs/assets/$f.jpg" >/dev/null
+  rm "docs/assets/$f.png"
+done
+
+# Website: prerender strings and JSON-LD (version comes from manifest.json).
+node store/src/site.mjs

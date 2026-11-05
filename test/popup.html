@@ -1,7 +1,9 @@
 <!doctype html>
 <!-- Renders popup/popup.html with an in-memory chrome.* stub. ?lang=en for English. -->
 <html>
-<head><meta charset="utf-8"><link rel="stylesheet" href="../popup/popup.css"></head>
+<head><meta charset="utf-8"><link rel="stylesheet" href="../popup/popup.css">
+<!-- Screenshots are taken mid-load: no transitions, so switches never show a half-way state. -->
+<style>*, *::before, *::after { transition: none !important; }</style></head>
 <body>
 <script type="module">
   const lang = new URLSearchParams(location.search).get("lang") || "vi";
