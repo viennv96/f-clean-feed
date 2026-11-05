@@ -75,6 +75,10 @@ sh store/build.sh
 
 ## Lịch sử phiên bản
 
+**1.3.1**
+- Thẻ MMO VPS ở cột phải có lề 16px: thẳng hàng với avatar trên thanh đầu trang và các khối của cột phải, không còn sát thanh cuộn.
+- Website: số lượt tải không còn hiện phiên bản cũ sau khi phát hành bản mới.
+
 **1.3.0**
 - Tuỳ chọn mới "Xem bình luận ngay dưới bài" (bật sẵn): bấm *Bình luận* là bình luận hiện ngay dưới bài trên bảng tin, có ảnh/nhãn dán và hiệu ứng đang tải, không mở hộp thoại. *Viết bình luận*, *Xem tất cả* và *N phản hồi* vẫn mở hộp thoại của Facebook.
 - Popup có tiếng Việt và tiếng Anh, đổi bằng công tắc VI / EN (mặc định theo ngôn ngữ của Chrome).

@@ -62,7 +62,10 @@ html[data-fbc-home][data-fbc-hide~="clean"] [role="main"] {
  */
 .fbc-promo {
   display: block;
-  margin: 8px 8px 12px;
+  box-sizing: border-box;
+  /* 16px sides: the left edge lines up with the column's headings
+     ("Birthdays"…) and the right edge with the avatar in the top bar. */
+  margin: 8px 16px 16px;
   padding: 10px 12px 12px;
   border-radius: 10px;
   background: var(--card-background, #fff);
