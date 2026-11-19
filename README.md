@@ -76,6 +76,9 @@ sh store/build.sh
 
 ## Lịch sử phiên bản
 
+**1.5.2**
+- Ẩn số đếm thông báo giờ ẩn cả chấm đỏ ở Messenger và Thông báo, không chỉ con số bên trong.
+
 **1.5.1**
 - Reels chỉ bị ẩn trên trang chủ. Trên trang cá nhân, fanpage, nhóm… Reels của chính người/trang đó vẫn hiện; thống kê cũng chỉ đếm Reels ở trang chủ.
 

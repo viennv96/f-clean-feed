@@ -396,6 +396,18 @@
   function scanBadges() {
     const banner = document.querySelector('[role="banner"]');
     if (!banner) return;
+    // Facebook draws each top-bar count (Messenger, Notifications) as a second,
+    // absolutely positioned [role=button] beside the icon's own button: a red
+    // circle holding the number plus screen-reader text. Hide that whole
+    // element, red circle included.
+    for (const b of banner.querySelectorAll('[role="button"]')) {
+      if (b.hasAttribute("data-fbc-kind") || b.querySelector("svg")) continue;
+      const parent = b.parentElement;
+      if (!parent || ![...parent.children].some((s) => s !== b && s.getAttribute("role") === "button" && s.querySelector("svg"))) continue;
+      if (getComputedStyle(b).position !== "absolute") continue;
+      mark(b, "badges");
+    }
+    // Older markup: a bare number; climb to the smallest box around it.
     for (const el of banner.querySelectorAll("span, div")) {
       if (el.firstElementChild || el.closest('[data-fbc-kind="badges"]')) continue;
       const text = el.textContent.trim();
