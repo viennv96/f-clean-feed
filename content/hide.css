@@ -4,11 +4,13 @@
  * setting is a pure CSS change and needs no re-scan.
  */
 
-/* Feed-like kinds: removed in "hide" mode, replaced by a placeholder in "collapse" mode. */
+/* Feed-like kinds: removed in "hide" mode, replaced by a placeholder in "collapse" mode.
+   Reels only on the home feed: on profiles and Pages they are that person's or
+   Page's own content and stay visible. */
 html[data-fbc-mode="hide"][data-fbc-hide~="sponsored"] [data-fbc-kind="sponsored"],
 html[data-fbc-mode="hide"][data-fbc-hide~="suggested"] [data-fbc-kind="suggested"],
-html[data-fbc-mode="hide"][data-fbc-hide~="reels"] [data-fbc-kind="reels"],
-html[data-fbc-mode="hide"][data-fbc-hide~="reelpost"] [data-fbc-kind="reelpost"],
+html[data-fbc-home][data-fbc-mode="hide"][data-fbc-hide~="reels"] [data-fbc-kind="reels"],
+html[data-fbc-home][data-fbc-mode="hide"][data-fbc-hide~="reelpost"] [data-fbc-kind="reelpost"],
 html[data-fbc-mode="hide"][data-fbc-hide~="pymk"] [data-fbc-kind="pymk"],
 html[data-fbc-mode="hide"][data-fbc-hide~="groups"] [data-fbc-kind="groups"],
 html[data-fbc-mode="hide"][data-fbc-hide~="search"] [data-fbc-kind="search"],
@@ -24,8 +26,8 @@ html[data-fbc-home][data-fbc-hide~="clean"] [data-fbc-kind="clean"] {
 
 html[data-fbc-mode="collapse"][data-fbc-hide~="sponsored"] [data-fbc-kind="sponsored"]:not([data-fbc-revealed]) > *,
 html[data-fbc-mode="collapse"][data-fbc-hide~="suggested"] [data-fbc-kind="suggested"]:not([data-fbc-revealed]) > *,
-html[data-fbc-mode="collapse"][data-fbc-hide~="reels"] [data-fbc-kind="reels"]:not([data-fbc-revealed]) > *,
-html[data-fbc-mode="collapse"][data-fbc-hide~="reelpost"] [data-fbc-kind="reelpost"]:not([data-fbc-revealed]) > *,
+html[data-fbc-home][data-fbc-mode="collapse"][data-fbc-hide~="reels"] [data-fbc-kind="reels"]:not([data-fbc-revealed]) > *,
+html[data-fbc-home][data-fbc-mode="collapse"][data-fbc-hide~="reelpost"] [data-fbc-kind="reelpost"]:not([data-fbc-revealed]) > *,
 html[data-fbc-mode="collapse"][data-fbc-hide~="pymk"] [data-fbc-kind="pymk"]:not([data-fbc-revealed]) > *,
 html[data-fbc-mode="collapse"][data-fbc-hide~="groups"] [data-fbc-kind="groups"]:not([data-fbc-revealed]) > *,
 html[data-fbc-mode="collapse"][data-fbc-hide~="search"] [data-fbc-kind="search"]:not([data-fbc-revealed]) > * {
@@ -34,8 +36,8 @@ html[data-fbc-mode="collapse"][data-fbc-hide~="search"] [data-fbc-kind="search"]
 
 html[data-fbc-mode="collapse"][data-fbc-hide~="sponsored"] [data-fbc-kind="sponsored"]:not([data-fbc-revealed])::before,
 html[data-fbc-mode="collapse"][data-fbc-hide~="suggested"] [data-fbc-kind="suggested"]:not([data-fbc-revealed])::before,
-html[data-fbc-mode="collapse"][data-fbc-hide~="reels"] [data-fbc-kind="reels"]:not([data-fbc-revealed])::before,
-html[data-fbc-mode="collapse"][data-fbc-hide~="reelpost"] [data-fbc-kind="reelpost"]:not([data-fbc-revealed])::before,
+html[data-fbc-home][data-fbc-mode="collapse"][data-fbc-hide~="reels"] [data-fbc-kind="reels"]:not([data-fbc-revealed])::before,
+html[data-fbc-home][data-fbc-mode="collapse"][data-fbc-hide~="reelpost"] [data-fbc-kind="reelpost"]:not([data-fbc-revealed])::before,
 html[data-fbc-mode="collapse"][data-fbc-hide~="pymk"] [data-fbc-kind="pymk"]:not([data-fbc-revealed])::before,
 html[data-fbc-mode="collapse"][data-fbc-hide~="groups"] [data-fbc-kind="groups"]:not([data-fbc-revealed])::before,
 html[data-fbc-mode="collapse"][data-fbc-hide~="search"] [data-fbc-kind="search"]:not([data-fbc-revealed])::before {

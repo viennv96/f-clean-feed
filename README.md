@@ -24,7 +24,7 @@
 
 ## Tính năng
 
-- **Bảng tin:** bài được tài trợ, "Gợi ý cho bạn", Reels (có tuỳ chọn giữ Reels của bạn bè), "Những người bạn có thể biết", nhóm gợi ý, thanh Tin (Stories).
+- **Bảng tin:** bài được tài trợ, "Gợi ý cho bạn", Reels trên trang chủ (có tuỳ chọn giữ Reels của bạn bè; Reels trên trang cá nhân và fanpage vẫn hiện), "Những người bạn có thể biết", nhóm gợi ý, thanh Tin (Stories).
 - **Quảng cáo khác:** Marketplace, kết quả tìm kiếm, cột phải.
 - **Giao diện:** nhắc sinh nhật, số đếm thông báo, chế độ gọn (ẩn 2 cột bên ở trang chủ).
 - **Không tự tải lại bảng tin** (bật sẵn): Facebook thường nạp lại bảng tin và nhảy về đầu trang khi bạn quay lại tab sau hơn 2 phút ở app khác. Tuỳ chọn này giữ nguyên chỗ bạn đang đọc, và không cho Chrome (Memory Saver) tạm tắt tab Facebook khi chạy nền.
@@ -75,6 +75,9 @@ sh store/build.sh
 ```
 
 ## Lịch sử phiên bản
+
+**1.5.1**
+- Reels chỉ bị ẩn trên trang chủ. Trên trang cá nhân, fanpage, nhóm… Reels của chính người/trang đó vẫn hiện; thống kê cũng chỉ đếm Reels ở trang chủ.
 
 **1.5.0**
 - Khung bình luận dưới bài có **menu sắp xếp** (Phù hợp nhất / Mới nhất / Tất cả bình luận, khi Facebook cho bài đó) và **ô viết bình luận** ngay tại chỗ: Enter để gửi, Shift+Enter xuống dòng; bình luận được Facebook đăng như khi viết trong hộp thoại.

@@ -78,8 +78,11 @@
   // Stats are buffered and flushed at most every 2s to keep storage writes cheap.
   let pending = {};
   let flushTimer = 0;
+  // Reels are only hidden on the home feed (hide.css), so only counted there.
+  const HOME_ONLY = new Set(["reels", "reelpost"]);
   function count(kind) {
     if (!hidden.has(kind)) return;
+    if (HOME_ONLY.has(kind) && !root.hasAttribute("data-fbc-home")) return;
     const bucket = STAT_KIND[kind] || kind;
     pending[bucket] = (pending[bucket] || 0) + 1;
     if (!flushTimer) flushTimer = setTimeout(flush, 2000);
